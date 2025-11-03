@@ -1,0 +1,444 @@
+<?php 
+session_start();
+?>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DragonStone - Sustainable Living</title>
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+    <!-- Custom CSS -->
+    <style>
+        :root {
+            --primary: #28a745; /* Green for sustainable theme */
+            --background: #f8f9fa;
+            --foreground: #212529;
+            --muted: #6c757d;
+            --accent: #20c997;
+            --hero-gradient: linear-gradient(to right, rgba(33, 37, 41, 0.8), rgba(33, 37, 41, 0.4));
+        }
+        body {
+            font-family: system-ui, -apple-system, sans-serif;
+            line-height: 1.6;
+            color: var(--foreground);
+            background-color: var(--background);
+        }
+        .bg-background { background-color: var(--background) !important; }
+        .text-background { color: var(--background) !important; }
+        .bg-foreground { background-color: var(--foreground) !important; }
+        .text-foreground { color: var(--foreground) !important; }
+        .bg-muted { background-color: #e9ecef !important; }
+        .text-muted-foreground { color: var(--muted) !important; }
+        .text-accent { color: var(--accent) !important; }
+        .bg-primary { background-color: var(--primary) !important; }
+        .text-primary { color: var(--primary) !important; }
+        .bg-gradient-hero {
+            background: linear-gradient(135deg, var(--primary) 0%, #198754 100%);
+        }
+        .hero-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--hero-gradient);
+        }
+        .inline {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+
+        }
+        .btn-hero {
+            background-color: var(--background);
+            color: var(--foreground);
+            border: none;
+            padding: 12px 24px;
+            font-size: 1.125rem;
+            font-weight: 500;
+        }
+        .btn-hero:hover {
+            background-color: #e9ecef;
+            color: var(--foreground);
+        }
+        .btn-outline-custom {
+            background-color: rgba(248, 249, 250, 0.1);
+            border: 1px solid var(--background);
+            color: var(--background);
+        }
+        .btn-outline-custom:hover {
+            background-color: var(--background);
+            color: var(--foreground);
+        }
+        .icon-circle {
+            width: 64px;
+            height: 64px;
+            background-color: rgba(40, 167, 69, 0.1);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 12px;
+        }
+        .icon-circle i {
+            font-size: 2rem;
+            color: var(--primary);
+        }
+        .animate-fade-in {
+            animation: fadeIn 0.8s ease-out forwards;
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        @keyframes fadeIn {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        .hero-img {
+            width: 100%;
+            height: 600px;
+            object-fit: cover;
+        }
+        .category-card, .product-card {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            border: none;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        .category-card:hover, .product-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.15);
+        }
+        .category-card img, .product-card img {
+            height: 250px;
+            object-fit: cover;
+        }
+        .header-cart {
+            position: relative;
+        }
+        .cart-badge {
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            background: var(--accent);
+            color: white;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            font-size: 0.75rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        footer a {
+            color: rgba(248, 249, 250, 0.7);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+        footer a:hover {
+            color: var(--background);
+        }
+        .hero-section {
+            height: 600px;
+            position: relative;
+            overflow: hidden;
+        }
+        .nav-link {
+            color: var(--background) !important;
+            text-decoration: none;
+            margin: 0 0.75rem;
+            transition: color 0.3s ease;
+        }
+        .nav-link:hover {
+            color: var(--accent) !important;
+        }
+        .nav-link.active {
+            color: var(--accent) !important;
+            font-weight: 500;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="bg-foreground text-background py-3">
+        <div class="container">
+            <div class="d-flex justify-content-between align-items-center">
+                <a href="/" class="text-xl fw-bold text-background">
+                    <i class="bi bi-leaf me-2"></i>DragonStone
+                </a>
+                <nav class="d-none d-md-flex">
+                    <a href="/" class="nav-link active">Home</a>
+                    <a href="products.php" class="nav-link">Products</a>
+                    <a href="/about" class="nav-link">About</a>
+                    <a href="/about" class="nav-link">Eco-Points</a>
+                    <a href="/about" class="nav-link">Subscription</a>
+                </nav>
+                <div class="header-cart">
+                    <!-- <a href="/cart" class="text-background">
+                        <i class="bi bi-cart fs-4"></i>
+                        <span class="cart-badge" id="cartCount">0</span>
+                    </a> -->
+                    <!-- <span class="inline">
+                    <a class="nav-link" href="..\login_process\DGLogin.php">Login</a>
+                    <a class="nav-link" href="..\Signip_process\DGSignup.php">Sign Up</a>
+                    </span> -->
+
+                <?php 
+                
+                require('../cartLogin.php');
+                ?>
+
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero-section">
+        <img src="https://via.placeholder.com/1920x600?text=Sustainable+Living" alt="Sustainable living" class="hero-img">
+        <div class="hero-overlay"></div>
+        <div class="container h-100 d-flex align-items-center position-relative">
+            <div class="row w-100">
+                <div class="col-lg-8 animate-fade-in">
+                    <h1 class="display-3 fw-bold mb-4 text-background lh-1">
+                        Sustainable Living,
+                        <span class="d-block text-accent">Beautifully Simple</span>
+                    </h1>
+                    <p class="fs-4 mb-4 text-background opacity-90">
+                        Discover eco-friendly products that are stylish, affordable, and kind to our planet.
+                        Every purchase makes a difference.
+                    </p>
+                    <div class="d-flex gap-3">
+                        <a href="products.php">
+                            <button class="btn btn-hero btn-lg px-4">Shop Now</button>
+                        </a>
+                        <a href="/about">
+                            <button class="btn btn-outline-custom btn-lg px-4">Our Story</button>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+<!-- Categories -->
+<section class="py-5 bg-light">
+  <div class="container">
+    <div class="text-center mb-5 animate-fade-in">
+      <h2 class="display-5 fw-bold mb-3">Shop by Category</h2>
+      <p class="fs-5 text-muted-foreground mx-auto" style="max-width: 32rem;">
+        Discover eco-friendly solutions for every corner of your home
+      </p>
+    </div>
+
+    <div class="row g-4 justify-content-center">
+      <!-- Category 1 -->
+      <div class="col-12 col-md-4">
+        <div class="card h-100 border-0 shadow-sm category-card animate-fade-in">
+          <img src="https://via.placeholder.com/400x250?text=Kitchen+Essentials" class="card-img-top rounded-top" alt="Kitchen Essentials">
+          <div class="card-body text-center">
+            <h5 class="card-title fw-semibold">Kitchen Essentials</h5>
+            <p class="card-text text-muted">Reusable wraps, compost bins, and eco utensils</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Category 2 -->
+      <div class="col-12 col-md-4">
+        <div class="card h-100 border-0 shadow-sm category-card animate-fade-in">
+          <img src="https://via.placeholder.com/400x250?text=Personal+Care" class="card-img-top rounded-top" alt="Personal Care">
+          <div class="card-body text-center">
+            <h5 class="card-title fw-semibold">Personal Care</h5>
+            <p class="card-text text-muted">Bamboo toothbrushes and natural body products</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Category 3 -->
+      <div class="col-12 col-md-4">
+        <div class="card h-100 border-0 shadow-sm category-card animate-fade-in">
+          <img src="https://via.placeholder.com/400x250?text=Outdoor+Living" class="card-img-top rounded-top" alt="Outdoor Living">
+          <div class="card-body text-center">
+            <h5 class="card-title fw-semibold">Outdoor Living</h5>
+            <p class="card-text text-muted">Solar lights, planters, and eco décor</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="text-center mt-5">
+      <a href="/categories">
+        <button class="btn btn-primary btn-lg px-4">Shop More Categories</button>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- Featured Products -->
+<section class="py-5 bg-muted">
+  <div class="container">
+    <div class="text-center mb-5 animate-fade-in">
+      <h2 class="display-5 fw-bold mb-3">Featured Products</h2>
+      <p class="fs-5 text-muted-foreground mx-auto" style="max-width: 32rem;">
+        Handpicked favorites for sustainable living
+      </p>
+    </div>
+
+    <div class="row g-4 justify-content-center">
+      <!-- Product 1 -->
+      <div class="col-12 col-md-4">
+        <div class="card h-100 border-0 shadow-sm product-card animate-fade-in">
+          <img src="https://via.placeholder.com/400x250?text=Bamboo+Toothbrush" class="card-img-top" alt="Bamboo Toothbrush">
+          <div class="card-body text-center">
+            <h5 class="card-title fw-semibold">Bamboo Toothbrush Set</h5>
+            <p class="card-text text-muted-foreground">$12.99</p>
+            <button class="btn btn-outline-primary w-100 add-to-cart" data-product="Bamboo Toothbrush Set">Add to Cart</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Product 2 -->
+      <div class="col-12 col-md-4">
+        <div class="card h-100 border-0 shadow-sm product-card animate-fade-in">
+          <img src="https://via.placeholder.com/400x250?text=Reusable+Straws" class="card-img-top" alt="Reusable Straws">
+          <div class="card-body text-center">
+            <h5 class="card-title fw-semibold">Reusable Stainless Straws</h5>
+            <p class="card-text text-muted-foreground">$8.99</p>
+            <button class="btn btn-outline-primary w-100 add-to-cart" data-product="Reusable Stainless Straws">Add to Cart</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Product 3 -->
+      <div class="col-12 col-md-4">
+        <div class="card h-100 border-0 shadow-sm product-card animate-fade-in">
+          <img src="https://via.placeholder.com/400x250?text=Eco+Bags" class="card-img-top" alt="Eco Bags">
+          <div class="card-body text-center">
+            <h5 class="card-title fw-semibold">Organic Cotton Eco Bags</h5>
+            <p class="card-text text-muted-foreground">$15.99</p>
+            <button class="btn btn-outline-primary w-100 add-to-cart" data-product="Organic Cotton Eco Bags">Add to Cart</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="text-center mt-5">
+      <a href="/products">
+        <button class="btn btn-primary btn-lg px-4">Shop More Products</button>
+      </a>
+    </div>
+  </div>
+</section>
+
+    <!-- CTA Section -->
+    <section class="py-5 bg-gradient-hero text-white">
+        <div class="container text-center">
+            <div class="row justify-content-center">
+                <div class="col-lg-8 animate-fade-in">
+                    <h2 class="display-4 fw-bold mb-3">Join the Sustainable Movement</h2>
+                    <p class="fs-4 opacity-90 mb-4">
+                        Together, we can make a difference. Start your eco-friendly journey today.
+                    </p>
+                    <a href="/products">
+                        <button class="btn btn-outline-light btn-lg px-4">Start Shopping</button>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-foreground text-background py-5">
+        <div class="container">
+            <div class="row g-4">
+                <div class="col-md-3">
+                    <div class="d-flex align-items-center gap-2 mb-3">
+                        <i class="bi bi-leaf"></i>
+                        <span class="fs-4 fw-bold">DragonStone</span>
+                    </div>
+                    <p class="small opacity-75">
+                        Making sustainable living accessible and aspirational for everyone.
+                    </p>
+                </div>
+                <div class="col-md-3">
+                    <h4 class="fw-semibold mb-3">Shop</h4>
+                    <ul class="list-unstyled small opacity-75">
+                        <li><a href="/products">All Products</a></li>
+                        <li><a href="/products?category=cleaning">Cleaning</a></li>
+                        <li><a href="/products?category=kitchen">Kitchen</a></li>
+                        <li><a href="/products?category=decor">Home Décor</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-3">
+                    <h4 class="fw-semibold mb-3">Company</h4>
+                    <ul class="list-unstyled small opacity-75">
+                        <li><a href="/about">About Us</a></li>
+                        <li><a href="#">Our Impact</a></li>
+                        <li><a href="#">Sustainability</a></li>
+                        <li><a href="#">Contact</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-3">
+                    <h4 class="fw-semibold mb-3">Connect</h4>
+                    <ul class="list-unstyled small opacity-75">
+                        <li><a href="#">Instagram</a></li>
+                        <li><a href="#">Facebook</a></li>
+                        <li><a href="#">Twitter</a></li>
+                        <li><a href="#">Newsletter</a></li>
+                    </ul>
+                </div>
+            </div>
+            <hr class="border opacity-20 my-4">
+            <div class="text-center small opacity-75">
+                <p>&copy; 2025 DragonStone. All rights reserved. Built with care for our planet.</p>
+            </div>
+        </div>
+    </footer>
+
+
+    <!-- Bootstrap 5 JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Custom JavaScript for Cart -->
+    <script>
+        let cartTotal = 0;
+
+        // Update cart badge
+        function updateCartBadge() {
+            document.getElementById('cartCount').textContent = cartTotal;
+        }
+
+        // Add to cart functionality
+                document.addEventListener('DOMContentLoaded', function() {
+            const addButtons = document.querySelectorAll('.add-to-cart');
+            addButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    const productName = this.getAttribute('data-product');
+                    // Simulate adding to cart
+                    cartTotal++;
+                    updateCartBadge();
+                    // Optional: Show alert or toast
+                    alert(`${productName} added to cart!`);
+                    // Update button state
+                    this.textContent = 'Added!';
+                    this.classList.remove('btn-primary');
+                    this.classList.add('btn-success');
+                    // Optional: Reset button after 2 seconds
+                    setTimeout(() => {
+                        this.textContent = 'Add to Cart';
+                        this.classList.remove('btn-success');
+                        this.classList.add('btn-primary');
+                    }, 2000);
+                });
+            });
+            // Stagger animations for fade-in elements (optional enhancement)
+            const fadeElements = document.querySelectorAll('.animate-fade-in');
+            fadeElements.forEach((el, index) => {
+                el.style.animationDelay = `${index * 0.2}s`;
+            });
+        });
+    </script>
