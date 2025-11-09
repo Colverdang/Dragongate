@@ -189,11 +189,11 @@
                     <i class="bi bi-leaf me-2"></i>DragonStone
                 </a>
                 <nav class="d-none d-md-flex">
-                    <a href="Homepage.php" class="nav-link">Home</a>
-                    <a href="#" class="nav-link active">Products</a>
-                    <a href="/about" class="nav-link">About</a>
-                    <a href="/about" class="nav-link">Eco-Points</a>
-                    <a href="/about" class="nav-link">Subscription</a>
+                    <a href="Homepage.php" class="nav-link ">Home</a>
+                    <a href="products.php" class="nav-link active">Products</a>
+                    <a href="#" class="nav-link">Community</a>
+                    <a href="ecopoints.php" class="nav-link">Eco-Points</a>
+                    <a href="subscription.php" class="nav-link">Subscription</a>
                 </nav>
                 <div class="header-cart">
                     <!-- <a href="/cart" class="text-background">

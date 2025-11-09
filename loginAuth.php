@@ -21,7 +21,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             if (!$PasswordVerdictBool) {
                 $ResultArr = [
                     'success' => false,
-                    'message' => "wrong pass"
+                    'message' => "wrong pass " . $PasswordStr . "ddd " . ($VPass ?? "halo")
                 ];
             } else{
                 $ResultArr = [

@@ -70,8 +70,8 @@
   <div class="auth-container" id="loginForm" style="display:none;">
     <h2>Login</h2>
     <form>
-      <input type="email" placeholder="Email" required>
-      <input type="password" placeholder="Password" required>
+      <input type="email" id="input2"placeholder="Email" required>
+      <input type="password" id="input" placeholder="Password" required>
       <button id="login">Login</button>
     </form>
     <div class="toggle-link">
@@ -113,6 +113,8 @@
     const surname = document.getElementById('surname');
     const email = document.getElementById('email');
     const password = document.getElementById('password');
+    const logpassword = document.getElementById('input');
+    const logemail = document.getElementById('input2');
     const cpassword = document.getElementById('cpassword');
 
     btnsignup.onclick = function () {
@@ -138,8 +140,8 @@
 
     btnlogin.onclick = function () {
       const data = new URLSearchParams();
-            data.append('email', email.value);
-            data.append('password', password.value);
+            data.append('email', logemail.value);
+            data.append('password', logpassword.value);
             fetch('../loginAuth.php',{
                 method: 'POST',
                 body: data
@@ -147,6 +149,8 @@
                 .then((response) => response.json())
                 .then((result) => {
                         alert(result.message);
+                        console.log(result.message);
+                        
                         if(result.success){
                             window.location.href = "../Home/Homepage.php";
                         }

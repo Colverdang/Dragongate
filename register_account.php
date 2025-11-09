@@ -25,15 +25,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     $HashedPassword = password_hash($PasswordStr, PASSWORD_DEFAULT);
 
-    // $CharactersStr = '0123456789abcdefghilkmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
-    // $CharactersLengthInt = strlen($CharactersStr);
-    // $PasscodeStr = '';
-
-    // for ($i = 0; $i < 6; $i++) {
-    //     $PasscodeStr .= $CharactersStr [random_int(0, $CharactersLengthInt - 1)];
-    // }
-
-    $SQLStr = 'INSERT INTO User (Name, Surname, Email, Password) VALUES (?,?,?,?)';
+    $SQLStr = 'INSERT INTO User (FirstName, Lastname, Email, Password) VALUES (?,?,?,?)';
     $StmtObj = $DbConnectionObj->prepare($SQLStr);
     $StmtObj->bind_param('ssss', $FirstNameStr, $SurnameStr, $EmailAddressStr, $HashedPassword);
     try {

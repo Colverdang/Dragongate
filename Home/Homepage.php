@@ -1,4 +1,6 @@
 <?php 
+header("Cache-Control: no-store, no-cache, must-revalidate, max-age=0");
+header("Pragma: no-cache");
 session_start();
 ?>
 <!DOCTYPE html>
@@ -160,6 +162,24 @@ session_start();
             color: var(--accent) !important;
             font-weight: 500;
         }
+
+        .user-nav {
+    display: flex;
+    align-items: center;
+    gap: 16px; 
+}
+
+.cart-link {
+    position: relative; 
+    display: inline-flex;
+    align-items: center;
+}
+
+.cart-badge {
+    position: absolute;
+    top: -6px;
+    right: -10px;
+}
     </style>
 </head>
 <body>
@@ -171,13 +191,13 @@ session_start();
                     <i class="bi bi-leaf me-2"></i>DragonStone
                 </a>
                 <nav class="d-none d-md-flex">
-                    <a href="/" class="nav-link active">Home</a>
+                    <a href="Homepage.php" class="nav-link active">Home</a>
                     <a href="products.php" class="nav-link">Products</a>
-                    <a href="/about" class="nav-link">About</a>
-                    <a href="/about" class="nav-link">Eco-Points</a>
-                    <a href="/about" class="nav-link">Subscription</a>
+                    <a href="#" class="nav-link">Community</a>
+                    <a href="ecopoints.php" class="nav-link">Eco-Points</a>
+                    <a href="subscription.php" class="nav-link">Subscription</a>
                 </nav>
-                <div class="header-cart">
+                <!-- <div class="header-cart"> -->
                     <!-- <a href="/cart" class="text-background">
                         <i class="bi bi-cart fs-4"></i>
                         <span class="cart-badge" id="cartCount">0</span>
@@ -192,7 +212,7 @@ session_start();
                 require('../cartLogin.php');
                 ?>
 
-                </div>
+                <!-- </div> -->
             </div>
         </div>
     </header>
@@ -441,4 +461,25 @@ session_start();
                 el.style.animationDelay = `${index * 0.2}s`;
             });
         });
+
+        function Logout() {
+                        fetch('../logout.php',{
+                method: 'POST',
+        
+            })
+                .then((response) => response.json())
+                .then((result) => {
+                        if(result.success){
+                            console.log("worked nigga");
+                            console.log(result.status);
+                            window.location.reload();
+                            
+                        }
+                        
+                })
+                .catch((error) => {
+
+                    console.log("error: " + error)
+                })
+        }
     </script>
