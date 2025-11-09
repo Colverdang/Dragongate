@@ -1,4 +1,3 @@
-# Use official PHP with Apache
 FROM php:8.2-apache
 
 # Enable common PHP extensions (optional)
