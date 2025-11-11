@@ -7,12 +7,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $EmailAddressStr = $_POST['email'] ?? "null";
     $PasswordStr = $_POST['password'] ?? "null";
 
-    $SQLStr = 'SELECT Password FROM User WHERE Email = ?';
+    $SQLStr = 'SELECT Id, Password FROM User WHERE Email = ?';
     $StmtObj = $DbConnectionObj->prepare($SQLStr);
     $StmtObj->bind_param('s',  $EmailAddressStr);
     try {
         $StmtObj->execute();
-            $StmtObj->bind_result($VPass);
+            $StmtObj->bind_result($Id, $VPass);
             $StmtObj->fetch();
 
 
@@ -30,6 +30,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 ];
 
                 $_SESSION['Auth'] = true;
+                $_SESSION['Id'] = $Id;
             }
 
 

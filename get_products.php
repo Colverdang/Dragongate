@@ -1,23 +1,31 @@
 <?php
-include('background_db_connector.php');
-
+require('background_db_connector.php'); // adjust path if needed
 header('Content-Type: application/json');
 
-// Prepare the SQL statement
-$stmt = $DbConnectionObj->prepare("SELECT * FROM Product");
-$stmt->execute();
+$sql = "SELECT Id, Name, Description, Price, Category, Image FROM Product";
+$result = $DbConnectionObj->query($sql);
 
-// Get the result
-$result = $stmt->get_result();
+$products = [];
 
-$categories = [];
-while ($row = $result->fetch_assoc()) {
-    $categories[] = $row;
+while($row = $result->fetch_assoc()) {
+
+    // Convert numeric category -> readable category names (optional)
+    $categoryMap = [
+        "0" => "Cleaning & Household",
+        "1" => "Kitchen & Dining",
+        "2" => "Home Décor & Living"
+    ];
+
+    $products[] = [
+        "id" => $row["Id"],
+        "name" => $row["Name"],
+        "description" => $row["Description"],
+        "price" => $row["Price"],
+        "category" => isset($categoryMap[$row["Category"]]) ? $categoryMap[$row["Category"]] : "Other",
+        "image" => $row["Image"] ? $row["Image"] : "https://via.placeholder.com/400x250?text=No+Image"
+    ];
 }
 
-echo json_encode($categories);
+echo json_encode($products);
 
-// Close the statement
-$stmt->close();
-?>
 

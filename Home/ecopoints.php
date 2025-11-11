@@ -245,11 +245,34 @@ session_start();
 
 <!-- Balance Box -->
 <div class="points-box mt-5 text-center">
-  <!-- <p class="text-muted mb-1">Your Current Balance</p>
-  <h2 class="display-4"><i class="fa-solid fa-leaf text-success"></i> <span id="currentBalance">0</span></h2>
-  <p class="mt-2 text-muted">EcoPoints</p> -->
 
-  <strong><i>Sign in to view eco point</i></strong>
+<?php 
+if (isset($_SESSION['Id'])) {
+
+    require('../background_db_connector.php'); // DB connection
+
+    $userId = $_SESSION['Id'];
+
+    // Fetch EcoPoints from database
+    $query = "SELECT EcoPoints FROM User WHERE id = $userId";
+    $result = mysqli_query($DbConnectionObj, $query);
+    $row = mysqli_fetch_assoc($result);
+    $ecoPoints = $row['EcoPoints'] ?? 0;
+?>
+    <p class="text-muted mb-1">Your Current Balance</p>
+    <h2 class="display-4">
+        <i class="fa-solid fa-leaf text-success"></i> 
+        <span id="currentBalance"><?= $ecoPoints ?></span>
+    </h2>
+    <p class="mt-2 text-muted">EcoPoints</p>
+
+<?php 
+} else { 
+?>
+    <strong><i>Sign in to view eco points</i></strong>
+<?php 
+}
+?>
 </div>
 
 <!-- Ways to Earn -->

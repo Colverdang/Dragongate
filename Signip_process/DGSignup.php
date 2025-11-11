@@ -94,74 +94,104 @@
     </div>
   </div>
 
-  <script>
-    function toggleForms() {
-      const loginForm = document.getElementById('loginForm');
-      const signupForm = document.getElementById('signupForm');
-      if (loginForm.style.display === 'none') {
-        loginForm.style.display = 'block';
-        signupForm.style.display = 'none';
-      } else {
-        loginForm.style.display = 'none';
-        signupForm.style.display = 'block';
+<script>
+  function toggleForms() {
+    const loginForm = document.getElementById('loginForm');
+    const signupForm = document.getElementById('signupForm');
+    if (loginForm.style.display === 'none') {
+      loginForm.style.display = 'block';
+      signupForm.style.display = 'none';
+    } else {
+      loginForm.style.display = 'none';
+      signupForm.style.display = 'block';
+    }
+  }
+
+  const btnlogin = document.getElementById('login');
+  const btnsignup = document.getElementById('signup');
+  const name = document.getElementById('name');
+  const surname = document.getElementById('surname');
+  const email = document.getElementById('email');
+  const password = document.getElementById('password');
+  const logpassword = document.getElementById('input');
+  const logemail = document.getElementById('input2');
+  const cpassword = document.getElementById('cpassword');
+
+  // Sign Up Validation + Submit
+  btnsignup.onclick = function () {
+
+    // Validation Rules
+    const nameRegex = /^[A-Za-z]+$/;
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    const passwordRegex = /^(?=.*[0-9]).{8,}$/;
+
+    if (!name.value.match(nameRegex)) {
+      alert("Name should contain letters only.");
+      return;
+    }
+
+    if (!surname.value.match(nameRegex)) {
+      alert("Surname should contain letters only.");
+      return;
+    }
+
+    if (!email.value.match(emailRegex)) {
+      alert("Please enter a valid email address.");
+      return;
+    }
+
+    if (!password.value.match(passwordRegex)) {
+      alert("Password must be at least 8 characters and contain at least 1 number.");
+      return;
+    }
+
+    if (password.value !== cpassword.value) {
+      alert("Passwords do not match.");
+      return;
+    }
+
+    // If validation passed → Continue fetch
+    const data = new URLSearchParams();
+    data.append('name', name.value);
+    data.append('surname', surname.value);
+    data.append('email', email.value);
+    data.append('password', password.value);
+
+    fetch('../register_account.php', {
+      method: 'POST',
+      body: data
+    })
+    .then((response) => response.json())
+    .then((result) => {
+      alert(result.message);
+    })
+    .catch((error) => {
+      console.log("error: " + error)
+    })
+  }
+
+
+  btnlogin.onclick = function () {
+    const data = new URLSearchParams();
+    data.append('email', logemail.value);
+    data.append('password', logpassword.value);
+
+    fetch('../loginAuth.php', {
+      method: 'POST',
+      body: data
+    })
+    .then((response) => response.json())
+    .then((result) => {
+      alert(result.message);
+      if(result.success){
+        window.location.href = "../Home/Homepage.php";
       }
-    }
+    })
+    .catch((error) => {
+      console.log("error: " + error)
+    })
+  }
+</script>
 
-    const btnlogin = document.getElementById('login');
-    const btnsignup = document.getElementById('signup');
-    const name = document.getElementById('name');
-    const surname = document.getElementById('surname');
-    const email = document.getElementById('email');
-    const password = document.getElementById('password');
-    const logpassword = document.getElementById('input');
-    const logemail = document.getElementById('input2');
-    const cpassword = document.getElementById('cpassword');
-
-    btnsignup.onclick = function () {
-      const data = new URLSearchParams();
-            data.append('name', name.value);
-            data.append('surname', surname.value);
-            data.append('email', email.value);
-            data.append('password', password.value);
-            data.append('cpassword', cpassword.value);
-            fetch('../register_account.php',{
-                method: 'POST',
-                body: data
-            })
-                .then((response) => response.json())
-                .then((result) => {
-                        alert(result.message);
-                })
-                .catch((error) => {
-
-                    console.log("error: " + error)
-                })
-    }
-
-    btnlogin.onclick = function () {
-      const data = new URLSearchParams();
-            data.append('email', logemail.value);
-            data.append('password', logpassword.value);
-            fetch('../loginAuth.php',{
-                method: 'POST',
-                body: data
-            })
-                .then((response) => response.json())
-                .then((result) => {
-                        alert(result.message);
-                        console.log(result.message);
-                        
-                        if(result.success){
-                            window.location.href = "../Home/Homepage.php";
-                        }
-                        
-                })
-                .catch((error) => {
-
-                    console.log("error: " + error)
-                })
-    }
-
-  </script>
 </body>
 </html>

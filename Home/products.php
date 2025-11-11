@@ -1,3 +1,8 @@
+<?php 
+header("Cache-Control: no-store, no-cache, must-revalidate, max-age=0");
+header("Pragma: no-cache");
+session_start();
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -200,10 +205,10 @@
                         <i class="bi bi-cart fs-4"></i>
                         <span class="cart-badge" id="cartCount">0</span>
                     </a> -->
-                    <span class="inline">
-                    <a class="nav-link" href="..\login_process\DGLogin.php">Login</a>
-                    <a class="nav-link" href="..\Signip_process\DGSignup.php">Sign Up</a>
-                    </span>
+                <?php 
+                
+                require('../cartLogin.php');
+                ?>
                 </div>
             </div>
         </div>
@@ -310,25 +315,44 @@
         let searchQuery = '';
 
         // Mock Products Data
-        const products = [
-            { id: 1, name: 'Bamboo Toothbrush Set', description: 'Eco-friendly bamboo toothbrushes', price: 12.99, category: 'Cleaning & Household', image: 'https://via.placeholder.com/400x250?text=Bamboo+Toothbrush' },
-            { id: 2, name: 'Reusable Stainless Straws', description: 'Durable stainless steel straws', price: 8.99, category: 'Kitchen & Dining', image: 'https://via.placeholder.com/400x250?text=Reusable+Straws' },
-            { id: 3, name: 'Organic Cotton Eco Bags', description: 'Reusable shopping bags from organic cotton', price: 15.99, category: 'Home Décor & Living', image: 'https://via.placeholder.com/400x250?text=Eco+Bags' },
-            { id: 4, name: 'Natural Cleaning Spray', description: 'Plant-based all-purpose cleaner', price: 9.99, category: 'Cleaning & Household', image: 'https://via.placeholder.com/400x250?text=Cleaning+Spray' },
-            { id: 5, name: 'Bamboo Cutting Board', description: 'Sustainable kitchen cutting board', price: 24.99, category: 'Kitchen & Dining', image: 'https://via.placeholder.com/400x250?text=Cutting+Board' },
-            { id: 6, name: 'Recycled Glass Vase', description: 'Handmade vase from recycled glass', price: 19.99, category: 'Home Décor & Living', image: 'https://via.placeholder.com/400x250?text=Glass+Vase' },
-            { id: 7, name: 'Eco Sponge Set', description: 'Biodegradable cleaning sponges', price: 6.99, category: 'Cleaning & Household', image: 'https://via.placeholder.com/400x250?text=Eco+Sponge' },
-            { id: 8, name: 'Silicone Food Storage Bags', description: 'Reusable silicone bags for food storage', price: 14.99, category: 'Kitchen & Dining', image: 'https://via.placeholder.com/400x250?text=Food+Bags' },
-            { id: 9, name: 'Wooden Wall Shelf', description: 'Sustainable wooden decor shelf', price: 29.99, category: 'Home Décor & Living', image: 'https://via.placeholder.com/400x250?text=Wall+Shelf' },
-            { id: 10, name: 'Laundry Detergent Sheets', description: 'Zero-waste laundry sheets', price: 11.99, category: 'Cleaning & Household', image: 'https://via.placeholder.com/400x250?text=Detergent+Sheets' },
-            { id: 11, name: 'Bamboo Dinnerware Set', description: 'Eco-friendly plates and bowls', price: 34.99, category: 'Kitchen & Dining', image: 'https://via.placeholder.com/400x250?text=Dinnerware' },
-            { id: 12, name: 'Cotton Throw Blanket', description: 'Organic cotton blanket for home', price: 39.99, category: 'Home Décor & Living', image: 'https://via.placeholder.com/400x250?text=Blanket' }
-        ];
+        // const products = [
+        //     { id: 1, name: 'Bamboo Toothbrush Set', description: 'Eco-friendly bamboo toothbrushes', price: 12.99, category: 'Cleaning & Household', image: 'https://via.placeholder.com/400x250?text=Bamboo+Toothbrush' },
+        //     { id: 2, name: 'Reusable Stainless Straws', description: 'Durable stainless steel straws', price: 8.99, category: 'Kitchen & Dining', image: 'https://via.placeholder.com/400x250?text=Reusable+Straws' },
+        //     { id: 3, name: 'Organic Cotton Eco Bags', description: 'Reusable shopping bags from organic cotton', price: 15.99, category: 'Home Décor & Living', image: 'https://via.placeholder.com/400x250?text=Eco+Bags' },
+        //     { id: 4, name: 'Natural Cleaning Spray', description: 'Plant-based all-purpose cleaner', price: 9.99, category: 'Cleaning & Household', image: 'https://via.placeholder.com/400x250?text=Cleaning+Spray' },
+        //     { id: 5, name: 'Bamboo Cutting Board', description: 'Sustainable kitchen cutting board', price: 24.99, category: 'Kitchen & Dining', image: 'https://via.placeholder.com/400x250?text=Cutting+Board' },
+        //     { id: 6, name: 'Recycled Glass Vase', description: 'Handmade vase from recycled glass', price: 19.99, category: 'Home Décor & Living', image: 'https://via.placeholder.com/400x250?text=Glass+Vase' },
+        //     { id: 7, name: 'Eco Sponge Set', description: 'Biodegradable cleaning sponges', price: 6.99, category: 'Cleaning & Household', image: 'https://via.placeholder.com/400x250?text=Eco+Sponge' },
+        //     { id: 8, name: 'Silicone Food Storage Bags', description: 'Reusable silicone bags for food storage', price: 14.99, category: 'Kitchen & Dining', image: 'https://via.placeholder.com/400x250?text=Food+Bags' },
+        //     { id: 9, name: 'Wooden Wall Shelf', description: 'Sustainable wooden decor shelf', price: 29.99, category: 'Home Décor & Living', image: 'https://via.placeholder.com/400x250?text=Wall+Shelf' },
+        //     { id: 10, name: 'Laundry Detergent Sheets', description: 'Zero-waste laundry sheets', price: 11.99, category: 'Cleaning & Household', image: 'https://via.placeholder.com/400x250?text=Detergent+Sheets' },
+        //     { id: 11, name: 'Bamboo Dinnerware Set', description: 'Eco-friendly plates and bowls', price: 34.99, category: 'Kitchen & Dining', image: 'https://via.placeholder.com/400x250?text=Dinnerware' },
+        //     { id: 12, name: 'Cotton Throw Blanket', description: 'Organic cotton blanket for home', price: 39.99, category: 'Home Décor & Living', image: 'https://via.placeholder.com/400x250?text=Blanket' }
+        // ];
+
+        let products = [];
+
+function loadProducts() {
+    fetch('../get_products.php')
+        .then(response => response.json())
+        .then(data => {
+            products = data;
+            filterProducts();
+        })
+        .catch(err => {
+            console.error("Failed to load products:", err);
+        });
+}
+
 
         // Update cart badge
-        function updateCartBadge() {
-            document.getElementById('cartCount').textContent = cartTotal;
-        }
+function updateCartBadge() {
+    const badge = document.getElementById('cartCount');
+    if (badge) {
+        badge.textContent = cartTotal;
+    }
+}
+
 
         // Render products
         function renderProducts(filteredProducts) {
@@ -349,7 +373,8 @@
                                 <h5 class="card-title fw-bold">${product.name}</h5>
                                 <p class="card-text text-muted-foreground flex-grow-1">${product.description}</p>
                                 <p class="card-text fw-bold text-primary fs-5 mb-2">$${product.price}</p>
-                                <button class="btn btn-primary w-100 mt-auto add-to-cart" data-product="${product.name}">Add to Cart</button>
+                               <button class="btn btn-primary w-100 mt-auto add-to-cart" data-id="${product.id}" data-name="${product.name}" data-price="${product.price}"> Add to Cart</button>
+
                             </div>
                         </div>
                     `;
@@ -410,29 +435,49 @@
         }
 
         // Add to cart
-        function attachAddToCartListeners() {
-            const addButtons = document.querySelectorAll('.add-to-cart');
-            addButtons.forEach(button => {
-                button.addEventListener('click', function() {
-                    const productName = this.getAttribute('data-product');
-                    // Simulate adding to cart
+// Add to cart (send to add_cart.php)
+function attachAddToCartListeners() {
+
+
+    const addButtons = document.querySelectorAll('.add-to-cart');
+    addButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            const productId = this.getAttribute('data-id');
+            const productName = this.getAttribute('data-name');
+            const productPrice = this.getAttribute('data-price');
+
+            // Send data to add_cart.php
+            fetch("../add_cart.php", {
+                method: "POST",
+                headers: { "Content-Type": "application/x-www-form-urlencoded" },
+                body: `id=${productId}&name=${productName}&price=${productPrice}`
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (!data.success && !data.Auth) {
+                    alert("Please login to add to cart");
+                    return
+                }
+
+                if (data.success) {
                     cartTotal++;
                     updateCartBadge();
-                    // Optional: Show alert or toast
-                    alert(`${productName} added to cart!`);
-                    // Update button state
                     this.textContent = 'Added!';
                     this.classList.remove('btn-primary');
                     this.classList.add('btn-success');
-                    // Optional: Reset button after 2 seconds
                     setTimeout(() => {
                         this.textContent = 'Add to Cart';
                         this.classList.remove('btn-success');
                         this.classList.add('btn-primary');
                     }, 2000);
-                });
+                } else {
+                    alert("Failed to add to cart.");
+                }
             });
-        }
+        });
+    });
+}
+
 
         // Initialize everything
         document.addEventListener('DOMContentLoaded', function() {
@@ -441,7 +486,7 @@
             attachSearchListener();
             attachClearListener();
             // Initial render
-            filterProducts();
+            loadProducts();
 
             // Stagger animations for fade-in elements (optional enhancement)
             const fadeElements = document.querySelectorAll('.animate-fade-in');
@@ -449,4 +494,25 @@
                 el.style.animationDelay = `${index * 0.1}s`;
             });
         });
+
+                function Logout() {
+                        fetch('../logout.php',{
+                method: 'POST',
+        
+            })
+                .then((response) => response.json())
+                .then((result) => {
+                        if(result.success){
+                            console.log("worked nigga");
+                            console.log(result.status);
+                            window.location.reload();
+                            
+                        }
+                        
+                })
+                .catch((error) => {
+
+                    console.log("error: " + error)
+                })
+        }
     </script>

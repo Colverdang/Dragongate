@@ -87,6 +87,66 @@
     </div>
   </div>
 
+  <!-- VIEW / EDIT PRODUCT MODAL -->
+<div class="modal fade" id="viewProductModal" tabindex="-1">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+
+      <div class="modal-header">
+        <h5 class="modal-title">View / Edit Product</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+
+      <div class="modal-body">
+        <form id="viewProductForm">
+
+          <input type="hidden" id="editProductIndex">
+
+          <div class="row mb-3">
+            <div class="col">
+              <label class="form-label">Product Name</label>
+              <input type="text" class="form-control pField" id="viewProductName" disabled>
+            </div>
+            <div class="col">
+              <label class="form-label">Price (R)</label>
+              <input type="number" class="form-control pField" id="viewProductPrice" disabled>
+            </div>
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label">Description</label>
+            <textarea class="form-control pField" id="viewProductDesc" rows="2" disabled></textarea>
+          </div>
+
+          <div class="row mb-3">
+            <div class="col">
+              <label class="form-label">Category</label>
+              <select class="form-select pField" id="viewProductCategory" disabled></select>
+            </div>
+            <div class="col">
+              <label class="form-label">Carbon Footprint (kg CO₂e)</label>
+              <input type="number" class="form-control pField" id="viewProductCarbon" disabled>
+            </div>
+          </div>
+
+          <div class="mb-3 text-center">
+            <img id="viewProductImagePreview" src="" class="img-fluid rounded" style="max-height:150px;">
+            <input type="file" class="form-control mt-2 pField" id="viewProductImage" accept="image/*" disabled>
+          </div>
+
+        </form>
+      </div>
+
+      <div class="modal-footer">
+        <button class="btn btn-secondary" id="enableEditBtn" onclick="enableProductEditing()">Edit</button>
+        <button class="btn btn-success" id="saveProductChangesBtn" onclick="saveProductChanges()" style="display:none;">Save Changes</button>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+
   <!-- ADD PRODUCT MODAL -->
   <div class="modal fade" id="addProductModal" tabindex="-1">
     <div class="modal-dialog">
@@ -262,18 +322,78 @@ function loadProductsFromDB() {
 }
 
 function renderProducts() {
-  document.getElementById("productTable").innerHTML = products.map((p, i) => `
-    <tr>
+  const table = document.getElementById("productTable");
+  table.innerHTML = products.map((p, i) => `
+    <tr onclick='openProductModal(${i})' style="cursor:pointer;">
       <td>${escapeHtml(p.name)}</td>
       <td>${escapeHtml(p.desc)}</td>
       <td>R ${Number(p.price).toFixed(2)}</td>
       <td>${escapeHtml(p.category)}</td>
       <td>${Number(p.carbon).toFixed(2)}</td>
-      <td>${p.imageUrl ? `<img src="${p.imageUrl}" class="product-thumb" alt="${escapeHtmlAttr(p.imageName)}">` : '—'}</td>
-      <td><button class='btn btn-danger btn-sm' onclick='deleteProduct(${i})'>Delete</button></td>
+      <td>${p.imageUrl ? `<img src="${p.imageUrl}" class="product-thumb">` : '—'}</td>
+      <td><button class='btn btn-danger btn-sm' onclick='event.stopPropagation(); deleteProduct(${i})'>Delete</button></td>
     </tr>
   `).join('');
 }
+
+function openProductModal(index) {
+  const p = products[index];
+  document.getElementById("editProductIndex").value = index;
+
+  document.getElementById("viewProductName").value = p.name;
+  document.getElementById("viewProductDesc").value = p.desc;
+  document.getElementById("viewProductPrice").value = p.price;
+  document.getElementById("viewProductCategory").value = p.category;
+  document.getElementById("viewProductCarbon").value = p.carbon;
+
+  document.getElementById("viewProductImagePreview").src = p.imageUrl || '';
+
+  disableProductFields();
+
+  new bootstrap.Modal(document.getElementById('viewProductModal')).show();
+}
+
+
+function disableProductFields() {
+  document.querySelectorAll('.pField').forEach(f => f.disabled = true);
+  document.getElementById("enableEditBtn").style.display = 'inline-block';
+  document.getElementById("saveProductChangesBtn").style.display = 'none';
+}
+
+function enableProductEditing() {
+  document.querySelectorAll('.pField').forEach(f => f.disabled = false);
+  document.getElementById("enableEditBtn").style.display = 'none';
+  document.getElementById("saveProductChangesBtn").style.display = 'inline-block';
+}
+
+
+function saveProductChanges() {
+  const index = document.getElementById("editProductIndex").value;
+  
+  const formData = new FormData();
+  formData.append("name", document.getElementById("viewProductName").value);
+  formData.append("description", document.getElementById("viewProductDesc").value);
+  formData.append("price", document.getElementById("viewProductPrice").value);
+  formData.append("category", document.getElementById("viewProductCategory").value);
+  formData.append("carbon", document.getElementById("viewProductCarbon").value);
+
+  const imageFile = document.getElementById("viewProductImage").files[0];
+  if (imageFile) formData.append("image", imageFile);
+
+  formData.append("id", products[index].id); // Ensure DB row reference
+
+  fetch("update_product.php", { method: "POST", body: formData })
+    .then(res => res.json())
+    .then(data => {
+      if (data.success) {
+        loadProductsFromDB();
+        disableProductFields();
+      } else {
+        alert(data.error || "Failed to update product");
+      }
+    });
+}
+
 
 // ADD PRODUCT TO DB
 function saveProduct() {

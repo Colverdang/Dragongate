@@ -15,7 +15,7 @@ if($Auth !== true){
                     ;
 } else {
     $html = '           <div class="header-cart">
-             <a href="/cart" class="text-background">
+             <a href="..\cart_page.php" class="text-background">
                         <i class="bi bi-cart fs-4"></i>
                         <span class="cart-badge" id="cartCount">0</span>
                     </a>
