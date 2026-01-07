@@ -49,6 +49,26 @@ session_start();
             height: 100%;
             background: var(--hero-gradient);
         }
+
+        .hero-section {
+            position: relative;
+        }
+
+        .hero-img {
+            position: absolute;
+            top: 0;
+            left: 0;
+            z-index: 1;
+        }
+
+        .hero-overlay {
+            z-index: 2;
+        }
+
+        .hero-section .container {
+            z-index: 3;
+        }
+
         .inline {
             display: flex;
             gap: 10px;
@@ -193,7 +213,7 @@ session_start();
                 <nav class="d-none d-md-flex">
                     <a href="Homepage.php" class="nav-link active">Home</a>
                     <a href="products.php" class="nav-link">Products</a>
-                    <a href="#" class="nav-link">Community</a>
+                    <a href="community.php" class="nav-link">Community</a>
                     <a href="ecopoints.php" class="nav-link">Eco-Points</a>
                     <a href="subscription.php" class="nav-link">Subscription</a>
                 </nav>
@@ -219,7 +239,7 @@ session_start();
 
     <!-- Hero Section -->
     <section class="hero-section">
-        <img src="https://via.placeholder.com/1920x600?text=Sustainable+Living" alt="Sustainable living" class="hero-img">
+        <img src="/Home/213160697_l.jpg" alt="Sustainable living" class="hero-img">
         <div class="hero-overlay"></div>
         <div class="container h-100 d-flex align-items-center position-relative">
             <div class="row w-100">

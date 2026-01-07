@@ -8,8 +8,7 @@ $Auth = $_SESSION['Auth'] ?? false;
 if($Auth !== true){
     $html = ' <div class="header-cart">                   
     <span class="inline">
-                    <a class="nav-link" href="..\login_process\DGLogin.php">Login</a>
-                    <a class="nav-link" href="..\Signip_process\DGSignup.php">Sign Up</a>
+                    <a class="nav-link" href="..\Signip_process\DGSignup.php">Sign in/up</a>
                     </span>
                     </div>'
                     ;

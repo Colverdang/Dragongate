@@ -196,7 +196,7 @@ session_start();
                 <nav class="d-none d-md-flex">
                     <a href="Homepage.php" class="nav-link ">Home</a>
                     <a href="products.php" class="nav-link active">Products</a>
-                    <a href="#" class="nav-link">Community</a>
+                    <a href="community.php" class="nav-link">Community</a>
                     <a href="ecopoints.php" class="nav-link">Eco-Points</a>
                     <a href="subscription.php" class="nav-link">Subscription</a>
                 </nav>
@@ -233,6 +233,11 @@ session_start();
                     <button class="btn category-btn btn-outline-primary" data-category="Cleaning & Household">Cleaning & Household</button>
                     <button class="btn category-btn btn-outline-primary" data-category="Kitchen & Dining">Kitchen & Dining</button>
                     <button class="btn category-btn btn-outline-primary" data-category="Home Décor & Living">Home Décor & Living</button>
+                    <button class="btn category-btn btn-outline-primary" data-category="Bathroom & Personal Care">Bathroom & Personal Care</button>
+                    <button class="btn category-btn btn-outline-primary" data-category="Lifestyle & Wellness">Lifestyle & Wellness</button>
+                    <button class="btn category-btn btn-outline-primary" data-category="Kids & Pets">Kids & Pets</button>
+                    <button class="btn category-btn btn-outline-primary" data-category="Outdoor & Garden">Outdoor & Garden</button>
+
                 </div>
                 <div class="search-input w-100 w-md-auto" style="min-width: 200px;">
                     <i class="bi bi-search"></i>

@@ -212,7 +212,7 @@ session_start();
                 <nav class="d-none d-md-flex">
                     <a href="Homepage.php" class="nav-link">Home</a>
                     <a href="products.php" class="nav-link">Products</a>
-                    <a href="#" class="nav-link">Community</a>
+                    <a href="community.php" class="nav-link">Community</a>
                     <a href="ecopoints.php" class="nav-link active">Eco-Points</a>
                     <a href="subscription.php" class="nav-link">Subscription</a>
                 </nav>

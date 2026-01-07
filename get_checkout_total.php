@@ -10,7 +10,7 @@ if (!isset($_SESSION['Auth']) || !$_SESSION['Auth']) {
 $userId = $_SESSION['Id'];
 
 // 1. Find active order session
-$SQL = "SELECT Id FROM OrderSession WHERE User_Id = ? AND Active = 1 ORDER BY Id DESC LIMIT 1";
+$SQL = "SELECT Id FROM cart WHERE UserId = ? AND state = 1 ORDER BY Id DESC LIMIT 1";
 $stmt = $DbConnectionObj->prepare($SQL);
 $stmt->bind_param('i', $userId);
 $stmt->execute();
@@ -27,9 +27,9 @@ if (!$orderSessionId) {
 // 2. Sum prices by joining OrderLineItem → Product
 $SQL = "
     SELECT SUM(p.Price) AS Total
-    FROM OrderLineItem oli
-    JOIN Product p ON oli.Product = p.Id
-    WHERE oli.Session = ?
+    FROM cartitem oli
+    JOIN Products p ON oli.productid = p.Id
+    WHERE oli.cartid = ?
 ";
 $stmt = $DbConnectionObj->prepare($SQL);
 $stmt->bind_param('i', $orderSessionId);

@@ -1,7 +1,8 @@
-<?php 
+<?php
+header("Cache-Control: no-store, no-cache, must-revalidate, max-age=0");
+header("Pragma: no-cache");
 session_start();
 ?>
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -279,9 +280,9 @@ footer a:hover { color:#fff; }
                 <nav class="d-none d-md-flex">
                     <a href="Homepage.php" class="nav-link">Home</a>
                     <a href="products.php" class="nav-link">Products</a>
-                    <a href="#" class="nav-link">Community</a>
-                    <a href="ecopoints.php" class="nav-link active">Eco-Points</a>
-                    <a href="subscription.php" class="nav-link">Subscription</a>
+                    <a href="community.php" class="nav-link">Community</a>
+                    <a href="ecopoints.php" class="nav-link ">Eco-Points</a>
+                    <a href="subscription.php" class="nav-link active">Subscription</a>
                 </nav>
                 <!-- <div class="header-cart"> -->
                     <!-- <a href="/cart" class="text-background">

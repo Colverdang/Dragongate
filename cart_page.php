@@ -6,7 +6,7 @@ $userId = $_SESSION['Id'];
 $active = 1;
 
 // 1) Check for active order session
-$SQLStr = "SELECT Id FROM OrderSession WHERE User_Id = ? AND ACTIVE = ?";
+$SQLStr = "SELECT Id FROM Cart WHERE UserId = ? AND State = ?";
 $StmtObj = $DbConnectionObj->prepare($SQLStr);
 $StmtObj->bind_param('ii', $userId, $active);
 $StmtObj->execute();
@@ -22,10 +22,10 @@ if (empty($OrderId)) {
 } else {
 
     // 2) Load cart items
-    $sql = "SELECT P.Id, P.Name, P.Price, P.CarbonFootprint, P.Image
-            FROM OrderLineItem C
-            JOIN Product P ON C.Product = P.Id
-            WHERE C.Session = $OrderId";
+    $sql = "SELECT P.Id, C.Id AS cartitem_id, P.Name, P.Price, P.Carbon, P.Image
+            FROM cartitem C
+            JOIN Products P ON C.productid = P.Id
+            WHERE C.cartid = $OrderId AND C.active = 1";
 
     $result = $DbConnectionObj->query($sql);
 
@@ -49,7 +49,7 @@ if (empty($OrderId)) {
 <h2>Your Cart</h2>
 
 <table class='table table-bordered bg-white'>
-<thead><tr><th>Product</th><th>Price</th><th>Qty</th><th>Total</th><th></th></tr></thead>
+<thead><tr><th>Product</th><th>Price</th><th>Carbon Footprint</th><th></th></tr></thead>
 <tbody>
 <?php if (empty($products)): ?>
 <tr>
@@ -61,16 +61,13 @@ if (empty($OrderId)) {
 <?php foreach ($products as $p):
     $line = $p['Price'] * ($p['Qty'] ?? 1);
     $total += $line;
-    $carbonTotal += $p['CarbonFootprint'] * ($p['Qty'] ?? 1);
+    $carbonTotal += $p['Carbon'] * ($p['Qty'] ?? 1);
 ?>
 <tr>
     <td><img src='<?= $p['Image'] ?>' width='50' class='me-2'> <?= $p['Name'] ?></td>
     <td>R<?= number_format($p['Price'],2) ?></td>
-    <td>
-        <input type='number' min='1' value='<?= ($p['Qty'] ?? 1) ?>' class='form-control form-control-sm qty-input' data-id='<?= $p['Id'] ?>'>
-    </td>
-    <td>R<?= number_format($line,2) ?></td>
-    <td><a href='remove_from_cart.php?id=<?= $p['Id'] ?>' class='btn btn-sm btn-danger'>&times;</a></td>
+    <td><?= number_format($p['Carbon'],2) ?> kg CO₂</td>
+    <td><a onclick="removeFromCart(<?= $p['cartitem_id'] ?>)" class='btn btn-sm btn-danger'>&times;</a></td>
 </tr>
 <?php endforeach; ?>
 <?php endif; ?>
@@ -97,6 +94,11 @@ document.querySelectorAll('.qty-input').forEach(input=>{
         }).then(()=>location.reload());
     });
 });
+
+function removeFromCart(id) {
+    fetch(`remove_from_cart.php?id=${id}`)
+        .then(() => location.reload());
+}
 </script>
 
 </body>

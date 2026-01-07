@@ -18,6 +18,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             'success' => false,
             'duplicate_email' => false,
             'message' => "Error processing your request",
+            'verdict email' => preg_match($PasswordPatternStr, $PasswordStr),
+            'verdict password' => preg_match($EmailPatternStr, $EmailAddressStr),
+            'verdict match' => $PasswordMatchBool,
+            'pass' => $PasswordStr,
+            'conpass' => $ConfirmPasswordStr,
+
         ];
         echo json_encode($ResultArr);
         exit();
@@ -25,7 +31,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     $HashedPassword = password_hash($PasswordStr, PASSWORD_DEFAULT);
 
-    $SQLStr = 'INSERT INTO User (FirstName, Lastname, Email, Password) VALUES (?,?,?,?)';
+    $SQLStr = 'INSERT INTO User (name, surname, Email, Password) VALUES (?,?,?,?)';
     $StmtObj = $DbConnectionObj->prepare($SQLStr);
     $StmtObj->bind_param('ssss', $FirstNameStr, $SurnameStr, $EmailAddressStr, $HashedPassword);
     try {

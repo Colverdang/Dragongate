@@ -67,7 +67,7 @@
   </style>
 </head>
 <body>
-  <div class="auth-container" id="loginForm" style="display:none;">
+  <div class="auth-container" id="loginForm" >
     <h2>Login</h2>
     <form>
       <input type="email" id="input2"placeholder="Email" required>
@@ -79,7 +79,7 @@
     </div>
   </div>
 
-  <div class="auth-container" id="signupForm" >
+  <div class="auth-container" id="signupForm" style="display:none;">
     <h2>Sign Up</h2>
     <form>
       <input type="text" id="name" placeholder="Name" required>
@@ -156,6 +156,7 @@
     data.append('surname', surname.value);
     data.append('email', email.value);
     data.append('password', password.value);
+    data.append('cpassword', cpassword.value);
 
     fetch('../register_account.php', {
       method: 'POST',

@@ -2,7 +2,7 @@
 require('background_db_connector.php'); // adjust path if needed
 header('Content-Type: application/json');
 
-$sql = "SELECT Id, Name, Description, Price, Category, Image FROM Product";
+$sql = "SELECT Id, Name, Description, Price, Catagory, Image FROM Products";
 $result = $DbConnectionObj->query($sql);
 
 $products = [];
@@ -21,7 +21,7 @@ while($row = $result->fetch_assoc()) {
         "name" => $row["Name"],
         "description" => $row["Description"],
         "price" => $row["Price"],
-        "category" => isset($categoryMap[$row["Category"]]) ? $categoryMap[$row["Category"]] : "Other",
+        "category" => isset($categoryMap[$row["Catagory"]]) ? $categoryMap[$row["Catagory"]] : "Other",
         "image" => $row["Image"] ? $row["Image"] : "https://via.placeholder.com/400x250?text=No+Image"
     ];
 }

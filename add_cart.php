@@ -29,7 +29,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     ];
 
     // 1. Check if user already has active order session
-    $SQLStr = 'SELECT Id FROM OrderSession WHERE User_Id = ? AND Active = 1 ORDER BY Id DESC LIMIT 1';
+    $SQLStr = 'SELECT Id FROM Cart WHERE userid = ? AND state = 1 ORDER BY Id DESC LIMIT 1';
     $StmtObj = $DbConnectionObj->prepare($SQLStr);
     $StmtObj->bind_param('i', $UserId);
     $StmtObj->execute();
@@ -39,16 +39,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     // 2. If no active session, create one
     if (!$OrderSessionId) {
-        $SQLStr = 'INSERT INTO OrderSession (User_Id, DateOrdered, Active) VALUES (?, ?, 1)';
+        $SQLStr = 'INSERT INTO Cart (UserId, state) VALUES (?, 1)';
         $StmtObj = $DbConnectionObj->prepare($SQLStr);
-        $StmtObj->bind_param('is', $UserId, $date);
+        $StmtObj->bind_param('i', $UserId);
         $StmtObj->execute();
         $OrderSessionId = $StmtObj->insert_id;
         $StmtObj->close();
     }
 
     // 3. Insert product into OrderItems table
-    $SQLStr = 'INSERT INTO OrderLineItem (Session, Product) VALUES (?, ?)';
+    $SQLStr = 'INSERT INTO cartitem (cartid, productid) VALUES (?, ?)';
     $StmtObj = $DbConnectionObj->prepare($SQLStr);
     $StmtObj->bind_param('ii', $OrderSessionId, $ProductId);
     $StmtObj->execute();
