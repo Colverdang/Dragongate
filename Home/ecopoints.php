@@ -247,7 +247,7 @@ session_start();
 <div class="points-box mt-5 text-center">
 
 <?php 
-if (isset($_SESSION['Id'])) {
+if (isset($_SESSION['Id'] ) && $_SESSION['Auth']) {
 
     require('../background_db_connector.php'); // DB connection
 
@@ -327,6 +327,10 @@ if (isset($_SESSION['Id'])) {
     <p class="text-muted mb-1">Required: 500 points</p>
   </div>
 </div>
+<?php
+var_dump($_SESSION);
+?>
+
 
 <!-- Bootstrap JS -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"></script>
@@ -336,6 +340,27 @@ if (isset($_SESSION['Id'])) {
   let points = 0;
   document.getElementById("currentBalance").innerText = points;
   document.getElementById("pointsDisplay").innerText = points;
+
+  function Logout() {
+      fetch('../logout.php',{
+          method: 'POST',
+
+      })
+          .then((response) => response.json())
+          .then((result) => {
+              if(result.success){
+                  console.log("worked nigga");
+                  console.log(result.status);
+                  window.location.reload();
+
+              }
+
+          })
+          .catch((error) => {
+
+              console.log("error: " + error)
+          })
+  }
 </script>
 
 </body>

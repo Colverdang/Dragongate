@@ -327,29 +327,20 @@ session_start();
                 <a href="ecopoints.php" class="nav-link ">Eco-Points</a>
                 <a href="subscription.php" class="nav-link">Subscription</a>
             </nav>
-            <!-- <div class="header-cart"> -->
-            <!-- <a href="/cart" class="text-background">
-                <i class="bi bi-cart fs-4"></i>
-                <span class="cart-badge" id="cartCount">0</span>
-            </a> -->
-            <!-- <span class="inline">
-            <a class="nav-link" href="..\login_process\DGLogin.php">Login</a>
-            <a class="nav-link" href="..\Signip_process\DGSignup.php">Sign Up</a>
-            </span> -->
+
 
             <?php
 
             require('../cartLogin.php');
             ?>
 
-            <!-- </div> -->
+
         </div>
     </div>
 </header>
 
 <div class="container py-5">
 
-    <!-- HERO -->
     <div class="text-center mb-5">
         <h1 class="fw-bold">Community Hub</h1>
         <p class="text-muted">Share tips, complete challenges, and earn EcoPoints while making a real impact.</p>
@@ -378,119 +369,407 @@ session_start();
         </div>
     </div>
 
-    <!-- ACTIVITIES + ECOPOINTS ROW -->
+    <?php if ($_SESSION['Auth']): ?>
+
     <div class="row g-4 mb-5">
 
-        <!-- ACTIVE CHALLENGES (8 COL) -->
         <div class="col-lg-8">
             <div class="d-flex justify-content-between align-items-center mb-3">
                 <h4 class="fw-semibold">Active Challenges</h4>
-                <a href="#" class="text-decoration-none">View All</a>
+                <a href="test.php" class="text-decoration-none">View All</a>
             </div>
 
-            <div class="card p-4 mb-3">
-                <div class="d-flex justify-content-between align-items-start">
-                    <div>
-                        <h5 class="fw-semibold">Zero Waste Week</h5>
-                        <div class="mb-2">
-                            <span class="badge bg-warning text-dark">Medium</span>
-                            <span class="badge bg-success">Joined</span>
-                        </div>
-                        <p class="text-muted mb-2">Produce no landfill waste for 7 days</p>
-                        <div class="d-flex gap-3 small text-muted mb-2">
-                            <span><i class="bi bi-star"></i> 500 pts</span>
-                            <span><i class="bi bi-people"></i> 1243</span>
-                            <span><i class="bi bi-clock"></i> 5d left</span>
-                        </div>
-                        <div class="progress">
-                            <div class="progress-bar bg-success" style="width:45%"></div>
-                        </div>
-                    </div>
-                    <div class="text-end">
-                        <button class="btn btn-outline-success btn-sm mb-2">Log</button><br />
-                        <a href="#" class="small text-muted">Leave</a>
-                    </div>
-                </div>
-            </div>
-
-            <div class="card p-4">
-                <div class="d-flex justify-content-between align-items-center">
-                    <div>
-                        <h5 class="fw-semibold">Plant-Based January</h5>
-                        <span class="badge bg-danger">Hard</span>
-                        <p class="text-muted mb-0">Embrace plant-based meals for the month</p>
-                    </div>
-                    <button class="btn btn-success btn-sm">Join</button>
-                </div>
-            </div>
+            <div id="challengesContainer"></div>
         </div>
 
-        <!-- ECOPOINTS (4 COL) -->
-        <div class="col-lg-4">
-            <div class="card p-4 h-100">
+        <?php
+        require('../background_db_connector.php'); // DB connection
+
+        $userId = $_SESSION['Id'];
+
+        // Fetch EcoPoints from database
+        $query = "SELECT EcoPoints FROM User WHERE id = $userId";
+        $result = mysqli_query($DbConnectionObj, $query);
+        $row = mysqli_fetch_assoc($result);
+        $ecoPoints = $row['EcoPoints'] ?? 0;
+        ?>
+
+
+
+        <div class="col-lg-4 ">
+            <div class="card p-4 h-100 d-flex flex-column justify-content-center text-center bg-gradient-hero">
                 <div class="d-flex justify-content-between align-items-center mb-2">
-                    <h5 class="fw-semibold">✨ Your EcoPoints</h5>
-                    <span class="text-danger small"><i class="bi bi-fire"></i> 12 days</span>
-                </div>
-                <h2 class="fw-bold text-success">2,450</h2>
-                <p class="text-muted">Earth Guardian</p>
 
-                <div class="mb-2 small d-flex justify-content-between">
-                    <span>Next level</span>
-                    <span>82%</span>
                 </div>
-                <div class="progress mb-4">
-                    <div class="progress-bar bg-success" style="width:82%"></div>
-                </div>
-
-                <button class="btn btn-success w-100">
-                    <i class="bi bi-gift"></i> Redeem Rewards
-                </button>
+                <h2 class="fw-bold text-white"><?= $ecoPoints ?></h2>
+                <h5 class="fw-semibold">✨ Your EcoPoints</h5>
             </div>
         </div>
     </div>
+
+    <div class="modal fade" id="postModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content shadow-sm">
+
+                <div class="modal-header">
+                    <h5 class="modal-title fw-semibold">Create Post</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+
+                <div class="modal-body">
+                    <form>
+                        <div class="mb-3">
+                            <label for="postTitle" class="form-label">Title</label>
+                            <input type="text" id="postTitle" class="form-control" placeholder="Enter a post title">
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="postContent" class="form-label">Content</label>
+                            <textarea id="postContent" class="form-control" rows="5" placeholder="What's on your mind?"></textarea>
+                        </div>
+                    </form>
+                </div>
+
+                <div class="modal-footer">
+                    <button class="btn btn-outline-secondary" data-bs-dismiss="modal">
+                        Cancel
+                    </button>
+                    <button class="btn btn-success" onclick="savePost()">>
+                        Post
+                    </button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+
 
     <!-- COMMENTS / POSTS ROW -->
     <div class="row">
         <div class="col-12">
-            <h4 class="fw-semibold mb-3">Recent Posts</h4>
-
-            <div class="card p-4 mb-3 post-card">
-                <div class="d-flex align-items-center mb-2">
-                    <div class="rounded-circle bg-success text-white d-flex align-items-center justify-content-center me-2" style="width:36px;height:36px;">SC</div>
-                    <strong>Sarah Chen</strong><span class="ms-2 text-muted small">2h</span>
-                    <span class="badge bg-success ms-auto">DIY</span>
-                </div>
-                <h6 class="fw-semibold">Made my own beeswax wraps</h6>
-                <p class="text-muted">Finally tried making beeswax wraps at home and they turned out amazing!</p>
-                <div class="d-flex gap-4 text-muted small">
-                    <span><i class="bi bi-heart-fill text-danger"></i> 234</span>
-                    <span><i class="bi bi-chat"></i> 45</span>
-                    <span class="ms-auto"><i class="bi bi-bookmark"></i></span>
-                </div>
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h4 class="fw-semibold mb-3">Recent Posts</h4>
+                <button id="postBtn" class="btn btn-success btn-sm">
+                    POST SOMETHING
+                </button>
             </div>
 
-            <div class="card p-4 mb-3 post-card">
-                <div class="d-flex align-items-center mb-2">
-                    <div class="rounded-circle bg-secondary text-white d-flex align-items-center justify-content-center me-2" style="width:36px;height:36px;">MR</div>
-                    <strong>Marcus Rivera</strong><span class="ms-2 text-muted small">5h</span>
-                    <span class="badge bg-warning text-dark ms-auto">Tips</span>
-                </div>
-                <h6 class="fw-semibold">5 swaps that reduced my bathroom plastic by 90%</h6>
-                <p class="text-muted">Small changes can make a huge impact!</p>
-                <div class="d-flex gap-4 text-muted small">
-                    <span><i class="bi bi-heart"></i> 189</span>
-                    <span><i class="bi bi-chat"></i> 32</span>
-                    <span class="ms-auto"><i class="bi bi-bookmark"></i></span>
-                </div>
-            </div>
+
+            <div id="postsContainer"></div>
 
         </div>
     </div>
 
+    <?php else: ?>
+    <div class="card p-5 text-center mt-5">
+        <i class="bi bi-lock fs-1 text-muted mb-3"></i>
+        <h4 class="fw-semibold">Members Only</h4>
+        <p class="text-muted mb-4">
+            Sign in to join challenges, earn EcoPoints, and post in the community.
+        </p>
+        <a href="../Signip_process/DGSignup.php" class="btn btn-success px-4">
+            Sign In
+        </a>
+    </div>
+    <?php endif; ?>
+
+
+
+
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+
+        document.getElementById('postBtn').addEventListener('click', function () {
+        const modal = new bootstrap.Modal(document.getElementById('postModal'));
+        modal.show();
+    });
+
+
+
+async function loadChallenges() {
+        const res = await fetch('../challenges.php');
+        const challenges = await res.json();
+
+        const container = document.getElementById('challengesContainer');
+        container.innerHTML = '';
+
+        if (!challenges?.data) {
+            showEmpty();
+            return;
+        }
+
+        // 🔥 ONLY ACTIVE CHALLENGES
+        const activeChallenges = challenges.data.filter(
+            c => c.ActiveId && c.Status === 'Active'
+        );
+
+        if (activeChallenges.length === 0) {
+            showEmpty();
+            return;
+        }
+
+        activeChallenges.forEach(c => {
+            container.innerHTML += `
+            <div class="card p-4 mb-3">
+                <div class="d-flex justify-content-between align-items-start">
+                    <div>
+                        <h5 class="fw-semibold">${c.Title}</h5>
+                        <p class="text-muted mb-2">${c.Description}</p>
+                        <small class="text-muted">
+                            <i class="bi bi-star"></i> ${c.Points} pts
+                        </small>
+                    </div>
+                    <div class="text-end">
+                        <button class="btn btn-outline-success btn-sm mb-1"
+                            onclick="finishChallenge(${c.ActiveId})">
+                            Finish
+                        </button><br>
+                        <button class="btn btn-link p-0 small text-muted"
+                            onclick="leaveChallenge(${c.ActiveId})">
+                            Leave
+                        </button>
+                    </div>
+                </div>
+            </div>
+        `;
+        });
+    }
+
+    function showEmpty() {
+        document.getElementById('challengesContainer').innerHTML = `
+        <div class="card p-4 text-center text-muted">
+            <i class="bi bi-emoji-neutral mb-2 fs-3"></i>
+            <p class="mb-0 fw-semibold">No active challenges</p>
+            <small>You haven’t joined any challenges yet</small>
+        </div>
+    `;
+    }
+
+
+
+    async function joinChallenge(id) {
+        await fetch('../join_challenge.php', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+            body: `challenge_id=${id}`
+        });
+        loadChallenges();
+    }
+
+    async function finishChallenge(id) {
+        await fetch('../finish_challenge.php', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+            body: `active_id=${id}`
+        });
+        loadChallenges();
+    }
+
+    async function leaveChallenge(id) {
+        if (!confirm('Leave this challenge?')) return;
+
+        await fetch('../leave_challenge.php', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+            body: `active_id=${id}`
+        });
+        loadChallenges();
+    }
+
+    document.addEventListener('DOMContentLoaded', loadChallenges);
+
+    /* -----LOAD POSTS---- */
+
+    const postsContainer = document.getElementById('postsContainer');
+
+
+        function loadPosts() {
+            fetch('../getPosts.php')
+                .then(res => res.json())
+                .then(posts => {
+                    postsContainer.innerHTML = '';
+
+                    posts.forEach(post => {
+                        const liked = post.likedByUser == 1;
+                        const heartClass = liked ? 'bi-heart-fill text-danger' : 'bi-heart';
+
+                        // Card
+                        const card = document.createElement('div');
+                        card.className = 'card p-4 mb-3 post-card';
+                        card.dataset.post = post.Id;
+
+                        // Header
+                        const header = document.createElement('div');
+                        header.className = 'd-flex align-items-center mb-2';
+
+                        const avatar = document.createElement('div');
+                        avatar.className =
+                            'rounded-circle bg-success text-white d-flex align-items-center justify-content-center me-2';
+                        avatar.style.width = '36px';
+                        avatar.style.height = '36px';
+                        avatar.textContent = post.Initials;
+
+                        const name = document.createElement('strong');
+                        name.textContent = post.Name;
+
+                        const time = document.createElement('span');
+                        time.className = 'ms-2 text-muted small';
+                        time.textContent = timeAgo(post.Date);
+
+                        header.append(avatar, name, time);
+
+                        // Title
+                        const title = document.createElement('h6');
+                        title.className = 'fw-semibold';
+                        title.textContent = post.Title;
+
+                        // Content
+                        const content = document.createElement('p');
+                        content.className = 'text-muted';
+                        content.textContent = post.Content;
+
+                        // Like section
+                        const actions = document.createElement('div');
+                        actions.className = 'd-flex gap-4 text-muted small';
+
+                        const likeBtn = document.createElement('span');
+                        likeBtn.className = 'like-btn d-flex align-items-center gap-1';
+                        likeBtn.dataset.liked = liked;
+                        likeBtn.dataset.id = post.Id;
+                        likeBtn.style.cursor = 'pointer';
+
+                        const icon = document.createElement('i');
+                        icon.className = `bi ${heartClass}`;
+
+                        const count = document.createElement('span');
+                        count.className = 'like-count';
+                        count.textContent = post.likeCount;
+
+                        likeBtn.append(icon, count);
+                        actions.append(likeBtn);
+
+                        card.append(header, title, content, actions);
+                        postsContainer.appendChild(card);
+                    });
+                })
+                .catch(err => console.error('Failed to load posts:', err));
+        }
+
+
+        //// LIKE / UNLIKE
+    postsContainer.addEventListener('click', e => {
+        const btn = e.target.closest('.like-btn');
+        if (!btn) return;
+
+        const postId = btn.dataset.id;
+        const icon = btn.querySelector('i');
+        const countEl = btn.querySelector('.like-count');
+
+        let liked = btn.dataset.liked === 'true';
+        let count = parseInt(countEl.textContent);
+
+        // optimistic UI update
+        btn.dataset.liked = (!liked).toString();
+        countEl.textContent = liked ? count - 1 : count + 1;
+
+        icon.classList.toggle('bi-heart-fill');
+        icon.classList.toggle('bi-heart');
+        icon.classList.toggle('text-danger');
+
+        fetch('../likepost.php', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({ postId })
+        })
+            .catch(() => {
+                // rollback if request fails
+                btn.dataset.liked = liked.toString();
+                countEl.textContent = count;
+                icon.classList.toggle('bi-heart-fill');
+                icon.classList.toggle('bi-heart');
+                icon.classList.toggle('text-danger');
+            });
+    });
+
+    function savePost() {
+        const title = document.getElementById('postTitle').value.trim();
+        const content = document.getElementById('postContent').value.trim();
+
+        if (!title || !content) {
+            alert('Title and content are required.');
+            return;
+        }
+
+        fetch('../createPost.php', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                title: title,
+                content: content
+            })
+        })
+            .then(res => res.json())
+            .then(data => {
+                if (data.success) {
+                    // Close modal
+                    const modalEl = document.getElementById('postModal');
+                    const modal = bootstrap.Modal.getInstance(modalEl);
+                    modal.hide();
+
+                    // Clear fields
+                    document.getElementById('postTitle').value = '';
+                    document.getElementById('postContent').value = '';
+
+                    // Reload posts
+                    loadPosts();
+                } else {
+                    alert(data.message || 'Failed to create post.');
+                }
+            })
+            .catch(err => {
+                console.error(err);
+                alert('Something went wrong.');
+            });
+
+    }
+
+
+    function timeAgo(date) {
+        const seconds = Math.floor((new Date() - new Date(date)) / 1000);
+        if (seconds < 60) return 'just now';
+        if (seconds < 3600) return Math.floor(seconds / 60) + 'm';
+        if (seconds < 86400) return Math.floor(seconds / 3600) + 'h';
+        return Math.floor(seconds / 86400) + 'd';
+    }
+
+        function Logout() {
+            fetch('../logout.php',{
+                method: 'POST',
+
+            })
+                .then((response) => response.json())
+                .then((result) => {
+                    if(result.success){
+                        console.log("worked nigga");
+                        console.log(result.status);
+                        window.location.reload();
+
+                    }
+
+                })
+                .catch((error) => {
+
+                    console.log("error: " + error)
+                })
+        }
+    loadPosts();
+
+</script>
 </body>
 </html>
-```
+

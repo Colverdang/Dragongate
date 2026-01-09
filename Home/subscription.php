@@ -321,7 +321,12 @@ footer a:hover { color:#fff; }
     <li>Biodegradable trash bags</li>
     <li>Charcoal air purifiers</li>
   </ul>
-  <button class="btn" onclick="showForm()">Subscribe Now</button>
+    <?php if ($_SESSION['Auth']): ?>
+        <button class="btn" onclick="showForm()">Subscribe Now</button>
+    <?php else: ?>
+        <button class="btn" onclick="redirectLogin()">Sign in to Subscribe</button>
+    <?php endif; ?>
+
 </div>
 
 <form id="signup" class="section-box">
@@ -349,6 +354,27 @@ function showForm(){
 document.getElementById("signup").onsubmit = function(e){
   e.preventDefault();
   alert("Subscription successful (mock).");
+}
+
+function Logout() {
+    fetch('../logout.php',{
+        method: 'POST',
+
+    })
+        .then((response) => response.json())
+        .then((result) => {
+            if(result.success){
+                console.log("worked nigga");
+                console.log(result.status);
+                window.location.reload();
+
+            }
+
+        })
+        .catch((error) => {
+
+            console.log("error: " + error)
+        })
 }
 </script>
 
