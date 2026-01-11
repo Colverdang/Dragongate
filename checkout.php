@@ -1,3 +1,18 @@
+<?php
+header("Cache-Control: no-store, no-cache, must-revalidate, max-age=0");
+header("Pragma: no-cache");
+session_start();
+require('background_db_connector.php'); // DB connection
+
+$userId = $_SESSION['Id'];
+
+// Fetch EcoPoints from database
+$query = "SELECT EcoPoints FROM User WHERE id = $userId";
+$result = mysqli_query($DbConnectionObj, $query);
+$row = mysqli_fetch_assoc($result);
+$ecoPoints = $row['EcoPoints'] ?? 0;
+?>
+
 <!DOCTYPE html>
 <html lang='en'>
 <head>
@@ -15,14 +30,18 @@
 <div class='col-md-6'>
 <div class='card p-4'>
 <h5 class='mb-3'>Order Summary</h5>
-<p>Subtotal: <span id='subtotal'>R0.00</span></p>
-<p><strong>Total: <span id='total'>R0.00</span></strong></p>
+    <p>Subtotal: <span id="subtotal">R0.00</span></p>
+    <p>Discount: <span id="discount">0%</span></p>
+    <p><strong>Total: <span id="total">R0.00</span></strong></p>
 <hr>
 <div class='mb-3 p-2 bg-success-subtle rounded'>
-<strong>Your EcoPoints:</strong> <span id='ecoPoints'>120</span>
+<strong>Your EcoPoints:</strong> <span id='ecoPoints'><?=$ecoPoints?></span>
 </div>
-<button id="activatePointsBtn" class='btn btn-outline-success w-100 mb-2'>Activate Points</button>
-<!-- Pay Now triggers modal -->
+    <button id="activatePointsBtn" class="btn btn-outline-success w-100 mb-2"
+        <?= ($ecoPoints >= 500) ? '' : 'disabled' ?>
+    >
+        <?= ($ecoPoints >= 500) ? 'Activate Points' : 'Need 500 EcoPoints to Activate' ?>
+    </button>
 <button id="payNowBtn" class='btn btn-primary w-100' data-bs-toggle="modal" data-bs-target="#paymentModal">Pay Now</button>
 </div>
 </div>
@@ -67,33 +86,61 @@
     </div>
   </div>
 </div>
-
+<script>
+    const ecoPoints = <?= (int)$ecoPoints ?>;
+</script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 <script>
-fetch('get_checkout_total.php')
-    .then(res => res.json())
-    .then(data => {
-        if (data.success) {
-            const total = parseFloat(data.total).toFixed(2);
-            document.getElementById('subtotal').textContent = `R${total}`;
-            document.getElementById('total').textContent = `R${total}`;
-        }
-    });
+    let originalTotal = 0;
+    let discountApplied = false;
 
-// Simulate payment processing
+    fetch('get_checkout_total.php')
+        .then(res => res.json())
+        .then(data => {
+            if (data.success) {
+                originalTotal = parseFloat(data.total);
+                updateTotals(originalTotal, 0);
+            }
+        });
+
+    function updateTotals(total, discountPercent) {
+        const discountAmount = total * (discountPercent / 100);
+        const finalTotal = total - discountAmount;
+
+        document.getElementById('subtotal').textContent = `${total.toFixed(2)}`;
+        document.getElementById('discount').textContent = `${discountPercent}%`;
+        document.getElementById('total').textContent = `${finalTotal.toFixed(2)}`;
+    }
+
+    const activateBtn = document.getElementById('activatePointsBtn');
+
+    if (activateBtn) {
+        activateBtn.addEventListener('click', () => {
+            if (discountApplied) return;
+
+            const discountPercent = Math.floor(ecoPoints / 500);
+
+            if (discountPercent > 0) {
+                updateTotals(originalTotal, discountPercent);
+                discountApplied = true;
+                activateBtn.disabled = true;
+                activateBtn.textContent = `Discount Applied (${discountPercent}%)`;
+            }
+        });
+    }
+
 document.getElementById('submitPayment').addEventListener('click', () => {
     const form = document.getElementById('cardForm');
     if (!form.checkValidity()) {
         form.reportValidity();
         return;
     }
-    // Here you would normally send card data to your payment gateway via AJAX
     document.getElementById('paymentMsg').classList.remove('d-none');
+
+
     setTimeout(() => {
         const modal = bootstrap.Modal.getInstance(document.getElementById('paymentModal'));
         modal.hide();
-        // Optionally redirect to success page
-        // window.location.href = "order_success.php";
     }, 1500);
 });
 
@@ -101,7 +148,6 @@ const cardNumberInput = document.getElementById('cardNumber');
 const cvvInput = document.getElementById('cvv');
 const expiryInput = document.getElementById('expiry');
 
-// Allow only numbers for card number
 cardNumberInput.addEventListener('input', () => {
     cardNumberInput.value = cardNumberInput.value.replace(/\D/g, '');
 });
@@ -120,15 +166,31 @@ expiryInput.addEventListener('input', () => {
     expiryInput.value = val;
 });
 
+
 function Pay() {
-    fetch('pay.php')
+    const price = document.getElementById('total').textContent;
+    console.log(price);
+fetch('pay.php', {
+    method: 'POST',
+    headers: {
+        'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({
+        discountApplied: discountApplied,
+        price: price
+    })
+})
     .then(res => res.json())
     .then(data => {
         if (data.success) {
             window.location.href = "Home/Homepage.php";
+        } else {
+            alert(data.message || 'Payment failed');
         }
     });
 }
+
+
 </script>
 
 </body>

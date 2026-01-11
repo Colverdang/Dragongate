@@ -1,10 +1,11 @@
 <?php
-$ServerNameStr = "localhost";
+$ServerNameStr = "ballast.proxy.rlwy.net";
 $UsernameStr = "root";
-$PasswordStr = "";
-$DatabaseStr = "dgtest";
+$PasswordStr = "SwaaNQfIHMqdMhjnqBXjcGxKeRviMsrU";
+$DatabaseStr = "railway";
+$PortStr = "59399";
 
-$DbConnectionObj = new mysqli($ServerNameStr, $UsernameStr, $PasswordStr, $DatabaseStr);
+$DbConnectionObj = new mysqli($ServerNameStr, $UsernameStr, $PasswordStr, $DatabaseStr, $PortStr);
 
 if ($DbConnectionObj->connect_error) {
     echo "Database connection failed: " . $DbConnectionObj->connect_error;

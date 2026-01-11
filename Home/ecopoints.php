@@ -1,6 +1,6 @@
 <?php 
-// header("Cache-Control: no-store, no-cache, must-revalidate, max-age=0");
-// header("Pragma: no-cache");
+ header("Cache-Control: no-store, no-cache, must-revalidate, max-age=0");
+ header("Pragma: no-cache");
 session_start();
 ?>
 
@@ -298,7 +298,6 @@ if (isset($_SESSION['Id'] ) && $_SESSION['Auth']) {
   </div>
 </div>
 
-<!-- Redeem Section -->
 <div class="container text-center mt-5">
   <h2 class="fw-bold">Redeem Your Points</h2>
 
@@ -307,19 +306,9 @@ if (isset($_SESSION['Id'] ) && $_SESSION['Auth']) {
     <p class="text-muted mb-1">Required: 500 points</p>
   </div>
 </div>
-<?php
-var_dump($_SESSION);
-?>
 
-
-<!-- Bootstrap JS -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"></script>
-
-<!-- JS Logic -->
 <script>
-  let points = 0;
-  document.getElementById("currentBalance").innerText = points;
-  document.getElementById("pointsDisplay").innerText = points;
 
   function Logout() {
       fetch('../logout.php',{

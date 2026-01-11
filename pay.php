@@ -1,65 +1,139 @@
 <?php
-include 'background_db_connector.php';
+header('Content-Type: application/json');
 session_start();
+require('background_db_connector.php');
 
-if (!isset($_SESSION['Auth']) || !$_SESSION['Auth']) {
-    echo json_encode(['success' => false, 'Auth' => false]);
+if (!isset($_SESSION['Id'])) {
+    echo json_encode(['success' => false, 'message' => 'Not logged in']);
     exit;
 }
 
-$userId = $_SESSION['Id'];
+$userId = (int)$_SESSION['Id'];
 
-// 1. Find active order session
-$SQL = "SELECT Id FROM cart WHERE UserId = ? AND state = 1 ORDER BY Id DESC LIMIT 1";
-$stmt = $DbConnectionObj->prepare($SQL);
-$stmt->bind_param('i', $userId);
-$stmt->execute();
-$stmt->bind_result($orderSessionId);
-$stmt->fetch();
-$stmt->close();
+/* -----------------------------
+   Read JSON body
+------------------------------ */
+$data = json_decode(file_get_contents("php://input"), true);
+$discountApplied = !empty($data['discountApplied']);
+$subtotal = $data['price'];
 
-if (!$orderSessionId) {
-    // No active cart
-    echo json_encode(['success' => true, 'total' => 0]);
-    exit;
+
+mysqli_begin_transaction($DbConnectionObj);
+
+try {
+
+    /* -----------------------------
+       1. Get user's EcoPoints
+    ------------------------------ */
+    $stmt = mysqli_prepare($DbConnectionObj,
+        "SELECT EcoPoints FROM User WHERE Id = ?"
+    );
+    mysqli_stmt_bind_param($stmt, "i", $userId);
+    mysqli_stmt_execute($stmt);
+    $result = mysqli_stmt_get_result($stmt);
+
+    if (!$user = mysqli_fetch_assoc($result)) {
+        throw new Exception("User not found");
+    }
+
+    $ecoPoints = (int)$user['EcoPoints'];
+
+    /* -----------------------------
+       2. Calculate discount & points used
+    ------------------------------ */
+    $discountPercent = $discountApplied ? floor($ecoPoints / 500) : 0;
+    $pointsUsed = $discountPercent * 500;
+
+    /* -----------------------------
+       3. Get latest active cart
+    ------------------------------ */
+    $stmt = mysqli_prepare($DbConnectionObj, "
+        SELECT Id 
+        FROM cart 
+        WHERE userid = ? AND state = '1'
+        ORDER BY Id DESC 
+        LIMIT 1
+    ");
+    mysqli_stmt_bind_param($stmt, "i", $userId);
+    mysqli_stmt_execute($stmt);
+    $result = mysqli_stmt_get_result($stmt);
+
+    if (!$cart = mysqli_fetch_assoc($result)) {
+        throw new Exception("No active cart found. " . $subtotal);
+    }
+
+    $cartId = (int)$cart['Id'];
+
+    /* -----------------------------
+       4. Calculate cart total
+       (adjust table/fields if needed)
+    ------------------------------ */
+//    $totalResult = mysqli_query($DbConnectionObj, "
+//        SELECT SUM(price * quantity) AS total
+//        FROM cartitems
+//        WHERE cartid = $cartId
+//    ");
+//
+//    $row = mysqli_fetch_assoc($totalResult);
+//    $subtotal = (float)$row['total'];
+//
+//    if ($subtotal <= 0) {
+//        throw new Exception("Cart is empty");
+//    }
+
+    $finalTotal = $subtotal - ($subtotal * ($discountPercent / 100));
+
+    /* -----------------------------
+       5. Insert order
+    ------------------------------ */
+    $stmt = mysqli_prepare($DbConnectionObj, "
+        INSERT INTO orders (userid, cartid, total)
+        VALUES (?, ?, ?)
+    ");
+    mysqli_stmt_bind_param($stmt, "iid", $userId, $cartId, $finalTotal);
+    mysqli_stmt_execute($stmt);
+
+    /* -----------------------------
+       6. EcoPoints logic
+    ------------------------------ */
+    if ($discountApplied && $pointsUsed > 0) {
+        // Deduct used points
+        $stmt = mysqli_prepare($DbConnectionObj, "
+            UPDATE User
+            SET EcoPoints = EcoPoints - ?
+            WHERE Id = ?
+        ");
+        mysqli_stmt_bind_param($stmt, "ii", $pointsUsed, $userId);
+        mysqli_stmt_execute($stmt);
+    } else {
+        // Reward user
+        $stmt = mysqli_prepare($DbConnectionObj, "
+            UPDATE User
+            SET EcoPoints = EcoPoints + 100
+            WHERE Id = ?
+        ");
+        mysqli_stmt_bind_param($stmt, "i", $userId);
+        mysqli_stmt_execute($stmt);
+    }
+
+    /* -----------------------------
+       7. Close cart
+    ------------------------------ */
+    $stmt = mysqli_prepare($DbConnectionObj,
+        "UPDATE cart SET state = '0' WHERE Id = ?"
+    );
+    mysqli_stmt_bind_param($stmt, "i", $cartId);
+    mysqli_stmt_execute($stmt);
+
+    mysqli_commit($DbConnectionObj);
+
+    echo json_encode(['success' => true]);
+
+} catch (Exception $e) {
+
+    mysqli_rollback($DbConnectionObj);
+    echo json_encode([
+        'success' => false,
+        'message' => $e->getMessage()
+    ]);
 }
-
-$SQL = "SELECT COUNT(*)
-        FROM cartitem
-        WHERE cartid = ?;";
-
-$stmt = $DbConnectionObj->prepare($SQL);
-$stmt->bind_param('i', $orderSessionId);
-$stmt->execute();
-$stmt->bind_result($num);
-$stmt->fetch();
-$stmt->close();
-
-$num = $num * 100;
-
-
-$SQL = "UPDATE User
-        SET EcoPoints = EcoPoints + ?
-        WHERE Id = ?;";
-$stmt = $DbConnectionObj->prepare($SQL);
-$stmt->bind_param('ii', $num,$userId );
-$stmt->execute();
-
-
-
-$SQL = "UPDATE cart
-        SET State = 0
-        WHERE Id = ?;";
-$stmt = $DbConnectionObj->prepare($SQL);
-$stmt->bind_param('i', $orderSessionId );
-$stmt->execute();
-
-echo json_encode([
-    'success' => true,
-]);
-
-
-
-
-
-

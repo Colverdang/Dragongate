@@ -385,7 +385,7 @@ session_start();
         </div>
 
         <?php
-        require('../background_db_connector.php'); // DB connection
+        require('../background_db_connector.php');
 
         $userId = $_SESSION['Id'];
 
@@ -526,7 +526,7 @@ async function loadChallenges() {
                     </div>
                     <div class="text-end">
                         <button class="btn btn-outline-success btn-sm mb-1"
-                            onclick="finishChallenge(${c.ActiveId})">
+                            onclick="finishChallenge(${c.ActiveId}, ${c.Points})">
                             Finish
                         </button><br>
                         <button class="btn btn-link p-0 small text-muted"
@@ -561,11 +561,11 @@ async function loadChallenges() {
         loadChallenges();
     }
 
-    async function finishChallenge(id) {
+    async function finishChallenge(id,points) {
         await fetch('../finish_challenge.php', {
             method: 'POST',
             headers: {'Content-Type': 'application/x-www-form-urlencoded'},
-            body: `active_id=${id}`
+            body: `active_id=${id}&points=${points}`
         });
         loadChallenges();
     }
