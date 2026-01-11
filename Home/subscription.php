@@ -2,6 +2,28 @@
 header("Cache-Control: no-store, no-cache, must-revalidate, max-age=0");
 header("Pragma: no-cache");
 session_start();
+
+
+require('../background_db_connector.php');
+
+$isSubscribed = false;
+
+if (isset($_SESSION['Id']) && $_SESSION['Auth']) {
+    $stmt = $DbConnectionObj->prepare(
+        "SELECT Id FROM subscription WHERE UserId = ? AND Active = 1 LIMIT 1"
+    );
+    $stmt->bind_param("i", $_SESSION['Id']);
+    $stmt->execute();
+    $stmt->store_result();
+
+    if ($stmt->num_rows > 0) {
+        $isSubscribed = true;
+    }
+
+    $stmt->close();
+}
+
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -9,8 +31,8 @@ session_start();
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Sustainable Subscription Boxes | DragonStone</title>
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
 
 
 <style>
@@ -311,23 +333,41 @@ footer a:hover { color:#fff; }
   <a href="#offers">See What's Inside</a>
 </section>
 
-<div class="section-box" id="offers">
-  <h2>Eco Essentials Subscription – $29.99/Month</h2>
-  <ul>
-    <li>Compostable cleaning pods</li>
-    <li>Refillable spray bottles</li>
-    <li>Plant-based detergent sheets</li>
-    <li>Wool dryer balls</li>
-    <li>Biodegradable trash bags</li>
-    <li>Charcoal air purifiers</li>
-  </ul>
-    <?php if ($_SESSION['Auth']): ?>
-        <button class="btn" onclick="showForm()">Subscribe Now</button>
-    <?php else: ?>
-        <button class="btn" onclick="redirectLogin()">Sign in to Subscribe</button>
-    <?php endif; ?>
+    <div class="section-box" id="offers">
+        <h2>Eco Essentials Subscription – $29.99/Month</h2>
 
-</div>
+        <ul>
+            <li>Compostable cleaning pods</li>
+            <li>Refillable spray bottles</li>
+            <li>Plant-based detergent sheets</li>
+            <li>Wool dryer balls</li>
+            <li>Biodegradable trash bags</li>
+            <li>Charcoal air purifiers</li>
+        </ul>
+
+        <?php if (!isset($_SESSION['Auth']) || !$_SESSION['Auth']): ?>
+
+            <button class="btn" onclick="redirectLogin()">Sign in to Subscribe</button>
+
+        <?php elseif ($isSubscribed): ?>
+
+            <div class="alert alert-success">
+                <i class="bi bi-check-circle"></i>
+                <strong>You are currently subscribed!</strong><br>
+                Your monthly eco-box will be delivered automatically
+            </div>
+
+            <button class="btn btn-danger" onclick="unsubscribe()">
+                Unsubscribe
+            </button>
+
+        <?php else: ?>
+
+            <button class="btn" onclick="showForm()">Subscribe Now</button>
+
+        <?php endif; ?>
+    </div>
+
 
 <form id="signup" class="section-box">
   <h2>Subscribe</h2>
@@ -354,6 +394,46 @@ function showForm(){
 document.getElementById("signup").onsubmit = function(e){
   e.preventDefault();
   alert("Subscription successful (mock).");
+}
+
+function redirectLogin(){
+    window.location.href = "../Signip_process/DGSignup.php"
+}
+
+
+    document.getElementById("signup").onsubmit = function(e){
+    e.preventDefault();
+
+    fetch('../subscribe.php', {
+    method: 'POST'
+})
+    .then(res => res.json())
+    .then(data => {
+    if (data.success) {
+    alert(data.message);
+    location.reload();
+} else {
+    alert(data.message);
+}
+})
+    .catch(err => {
+    console.error(err);
+    alert("Something went wrong");
+});
+};
+
+function unsubscribe() {
+    if (!confirm("Are you sure you want to unsubscribe?")) return;
+
+    fetch('../unsubscribe.php', {
+        method: 'POST'
+    })
+        .then(res => res.json())
+        .then(data => {
+            alert(data.message);
+            if (data.success) location.reload();
+        })
+        .catch(() => alert("Something went wrong"));
 }
 
 function Logout() {

@@ -12,7 +12,7 @@ session_start();
     <!-- Bootstrap 5 CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- Bootstrap Icons -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
     <!-- Custom CSS -->
     <style>
         :root {
@@ -207,7 +207,7 @@ session_start();
     <header class="bg-foreground text-background py-3">
         <div class="container">
             <div class="d-flex justify-content-between align-items-center">
-                <a href="/" class="text-xl fw-bold text-background">
+                <a href="Homepage.php" class="text-xl fw-bold text-background">
                     <i class="bi bi-leaf me-2"></i>DragonStone
                 </a>
                 <nav class="d-none d-md-flex">
@@ -217,22 +217,12 @@ session_start();
                     <a href="ecopoints.php" class="nav-link">Eco-Points</a>
                     <a href="subscription.php" class="nav-link">Subscription</a>
                 </nav>
-                <!-- <div class="header-cart"> -->
-                    <!-- <a href="/cart" class="text-background">
-                        <i class="bi bi-cart fs-4"></i>
-                        <span class="cart-badge" id="cartCount">0</span>
-                    </a> -->
-                    <!-- <span class="inline">
-                    <a class="nav-link" href="..\login_process\DGLogin.php">Login</a>
-                    <a class="nav-link" href="..\Signip_process\DGSignup.php">Sign Up</a>
-                    </span> -->
 
                 <?php 
                 
                 require('../cartLogin.php');
                 ?>
 
-                <!-- </div> -->
             </div>
         </div>
     </header>
@@ -256,126 +246,11 @@ session_start();
                         <a href="products.php">
                             <button class="btn btn-hero btn-lg px-4">Shop Now</button>
                         </a>
-                        <a href="/about">
-                            <button class="btn btn-outline-custom btn-lg px-4">Our Story</button>
-                        </a>
                     </div>
                 </div>
             </div>
         </div>
     </section>
-
-
-<!-- Categories -->
-<section class="py-5 bg-light">
-  <div class="container">
-    <div class="text-center mb-5 animate-fade-in">
-      <h2 class="display-5 fw-bold mb-3">Shop by Category</h2>
-      <p class="fs-5 text-muted-foreground mx-auto" style="max-width: 32rem;">
-        Discover eco-friendly solutions for every corner of your home
-      </p>
-    </div>
-
-    <div class="row g-4 justify-content-center">
-      <!-- Category 1 -->
-      <div class="col-12 col-md-4">
-        <div class="card h-100 border-0 shadow-sm category-card animate-fade-in">
-          <img src="https://via.placeholder.com/400x250?text=Kitchen+Essentials" class="card-img-top rounded-top" alt="Kitchen Essentials">
-          <div class="card-body text-center">
-            <h5 class="card-title fw-semibold">Kitchen Essentials</h5>
-            <p class="card-text text-muted">Reusable wraps, compost bins, and eco utensils</p>
-          </div>
-        </div>
-      </div>
-
-      <!-- Category 2 -->
-      <div class="col-12 col-md-4">
-        <div class="card h-100 border-0 shadow-sm category-card animate-fade-in">
-          <img src="https://via.placeholder.com/400x250?text=Personal+Care" class="card-img-top rounded-top" alt="Personal Care">
-          <div class="card-body text-center">
-            <h5 class="card-title fw-semibold">Personal Care</h5>
-            <p class="card-text text-muted">Bamboo toothbrushes and natural body products</p>
-          </div>
-        </div>
-      </div>
-
-      <!-- Category 3 -->
-      <div class="col-12 col-md-4">
-        <div class="card h-100 border-0 shadow-sm category-card animate-fade-in">
-          <img src="https://via.placeholder.com/400x250?text=Outdoor+Living" class="card-img-top rounded-top" alt="Outdoor Living">
-          <div class="card-body text-center">
-            <h5 class="card-title fw-semibold">Outdoor Living</h5>
-            <p class="card-text text-muted">Solar lights, planters, and eco décor</p>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div class="text-center mt-5">
-      <a href="/categories">
-        <button class="btn btn-primary btn-lg px-4">Shop More Categories</button>
-      </a>
-    </div>
-  </div>
-</section>
-
-<!-- Featured Products -->
-<section class="py-5 bg-muted">
-  <div class="container">
-    <div class="text-center mb-5 animate-fade-in">
-      <h2 class="display-5 fw-bold mb-3">Featured Products</h2>
-      <p class="fs-5 text-muted-foreground mx-auto" style="max-width: 32rem;">
-        Handpicked favorites for sustainable living
-      </p>
-    </div>
-
-    <div class="row g-4 justify-content-center">
-      <!-- Product 1 -->
-      <div class="col-12 col-md-4">
-        <div class="card h-100 border-0 shadow-sm product-card animate-fade-in">
-          <img src="https://via.placeholder.com/400x250?text=Bamboo+Toothbrush" class="card-img-top" alt="Bamboo Toothbrush">
-          <div class="card-body text-center">
-            <h5 class="card-title fw-semibold">Bamboo Toothbrush Set</h5>
-            <p class="card-text text-muted-foreground">$12.99</p>
-            <button class="btn btn-outline-primary w-100 add-to-cart" data-product="Bamboo Toothbrush Set">Add to Cart</button>
-          </div>
-        </div>
-      </div>
-
-      <!-- Product 2 -->
-      <div class="col-12 col-md-4">
-        <div class="card h-100 border-0 shadow-sm product-card animate-fade-in">
-          <img src="https://via.placeholder.com/400x250?text=Reusable+Straws" class="card-img-top" alt="Reusable Straws">
-          <div class="card-body text-center">
-            <h5 class="card-title fw-semibold">Reusable Stainless Straws</h5>
-            <p class="card-text text-muted-foreground">$8.99</p>
-            <button class="btn btn-outline-primary w-100 add-to-cart" data-product="Reusable Stainless Straws">Add to Cart</button>
-          </div>
-        </div>
-      </div>
-
-      <!-- Product 3 -->
-      <div class="col-12 col-md-4">
-        <div class="card h-100 border-0 shadow-sm product-card animate-fade-in">
-          <img src="https://via.placeholder.com/400x250?text=Eco+Bags" class="card-img-top" alt="Eco Bags">
-          <div class="card-body text-center">
-            <h5 class="card-title fw-semibold">Organic Cotton Eco Bags</h5>
-            <p class="card-text text-muted-foreground">$15.99</p>
-            <button class="btn btn-outline-primary w-100 add-to-cart" data-product="Organic Cotton Eco Bags">Add to Cart</button>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div class="text-center mt-5">
-      <a href="/products">
-        <button class="btn btn-primary btn-lg px-4">Shop More Products</button>
-      </a>
-    </div>
-  </div>
-</section>
-
-    <!-- CTA Section -->
     <section class="py-5 bg-gradient-hero text-white">
         <div class="container text-center">
             <div class="row justify-content-center">

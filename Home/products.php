@@ -12,7 +12,7 @@ session_start();
     <!-- Bootstrap 5 CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- Bootstrap Icons -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
     <!-- Custom CSS -->
     <style>
         :root {
@@ -190,7 +190,7 @@ session_start();
     <header class="bg-foreground text-background py-3">
         <div class="container">
             <div class="d-flex justify-content-between align-items-center">
-                <a href="/" class="text-xl fw-bold text-background">
+                <a href="Homepage.php" class="text-xl fw-bold text-background">
                     <i class="bi bi-leaf me-2"></i>DragonStone
                 </a>
                 <nav class="d-none d-md-flex">
@@ -200,16 +200,12 @@ session_start();
                     <a href="ecopoints.php" class="nav-link">Eco-Points</a>
                     <a href="subscription.php" class="nav-link">Subscription</a>
                 </nav>
-                <div class="header-cart">
-                    <!-- <a href="/cart" class="text-background">
-                        <i class="bi bi-cart fs-4"></i>
-                        <span class="cart-badge" id="cartCount">0</span>
-                    </a> -->
+
+
                 <?php 
                 
                 require('../cartLogin.php');
                 ?>
-                </div>
             </div>
         </div>
     </header>

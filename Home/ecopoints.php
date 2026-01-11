@@ -11,11 +11,11 @@ session_start();
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>EcoPoints Rewards | DragonStone</title>
 
+    <!-- Bootstrap Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+
   <!-- Bootstrap CSS -->
-  <link
-    href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css"
-    rel="stylesheet"
-  />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 
   <!-- Google Font -->
   <link
@@ -216,22 +216,10 @@ session_start();
                     <a href="ecopoints.php" class="nav-link active">Eco-Points</a>
                     <a href="subscription.php" class="nav-link">Subscription</a>
                 </nav>
-                <!-- <div class="header-cart"> -->
-                    <!-- <a href="/cart" class="text-background">
-                        <i class="bi bi-cart fs-4"></i>
-                        <span class="cart-badge" id="cartCount">0</span>
-                    </a> -->
-                    <!-- <span class="inline">
-                    <a class="nav-link" href="..\login_process\DGLogin.php">Login</a>
-                    <a class="nav-link" href="..\Signip_process\DGSignup.php">Sign Up</a>
-                    </span> -->
-
                 <?php 
                 
                 require('../cartLogin.php');
                 ?>
-
-                <!-- </div> -->
             </div>
         </div>
     </header>
@@ -249,7 +237,7 @@ session_start();
 <?php 
 if (isset($_SESSION['Id'] ) && $_SESSION['Auth']) {
 
-    require('../background_db_connector.php'); // DB connection
+    require('../background_db_connector.php');
 
     $userId = $_SESSION['Id'];
 
@@ -279,7 +267,7 @@ if (isset($_SESSION['Id'] ) && $_SESSION['Auth']) {
 <div class="container mt-5">
   <h2 class="text-center fw-bold">Ways to Earn EcoPoints</h2>
 
-  <div class="row mt-4 g-4">
+  <div class="row mt-4 g-4 align-items-center justify-content-center" >
     <div class="col-md-3">
       <div class="earn-card">
         <i class="fa-solid fa-bag-shopping text-success fs-2"></i>
@@ -307,14 +295,6 @@ if (isset($_SESSION['Id'] ) && $_SESSION['Auth']) {
       </div>
     </div>
 
-    <div class="col-md-3">
-      <div class="earn-card">
-        <i class="fa-solid fa-heart text-danger fs-2"></i>
-        <span class="badge bg-danger-subtle text-danger border border-danger rounded-pill ms-2">200 points</span>
-        <h5 class="mt-3 fw-semibold">Referral Program</h5>
-        <p>Invite friends and both earn points</p>
-      </div>
-    </div>
   </div>
 </div>
 
