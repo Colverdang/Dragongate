@@ -369,7 +369,9 @@ session_start();
         </div>
     </div>
 
-    <?php if ($_SESSION['Auth']): ?>
+    <?php
+    $session = $_SESSION['Auth']?? false;
+    if ($session): ?>
 
     <div class="row g-4 mb-5">
 
