@@ -377,7 +377,6 @@ footer a:hover { color:#fff; }
   <input type="text" placeholder="Card Number" required>
   <input type="text" placeholder="Expiry (MM/YY)" required>
   <input type="text" placeholder="CVV" required>
-  <label><input type="checkbox"> Join EcoPoints program</label>
   <button class="btn" type="Submit">Complete Subscription</button>
 </form>
 

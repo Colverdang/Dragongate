@@ -5,7 +5,6 @@ if (session_status() === PHP_SESSION_NONE) {
 include 'background_db_connector.php';
 
 $Auth = $_SESSION['Auth'] ?? false;
-$UserId = $_SESSION['Id'];
 
 if($Auth !== true){
     $html = ' <div class="header-cart">                   
@@ -15,6 +14,8 @@ if($Auth !== true){
                     </div>'
                     ;
 } else {
+
+    $UserId = $_SESSION['Id'];
     $SQLStr = 'SELECT Id FROM cart WHERE userid = ? AND state = 1 ORDER BY Id DESC LIMIT 1';
     $StmtObj = $DbConnectionObj->prepare($SQLStr);
     $StmtObj->bind_param('i', $UserId);
