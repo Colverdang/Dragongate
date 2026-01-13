@@ -154,6 +154,15 @@ session_start();
             align-items: center;
             justify-content: center;
         }
+           footer {
+               background:#222;
+               color:#fff;
+               text-align:center;
+               padding:20px;
+               margin-top:60px;
+           }
+           footer a { color:#bbb; text-decoration:none; }
+           footer a:hover { color:#fff; }
         footer a {
             color: rgba(248, 249, 250, 0.7);
             text-decoration: none;
@@ -206,7 +215,7 @@ session_start();
     <header class="bg-foreground text-background py-3">
         <div class="container">
             <div class="d-flex justify-content-between align-items-center">
-                <a href="/" class="text-xl fw-bold text-background">
+                <a href="Homepage.php" class="text-xl fw-bold text-background">
                     <i class="bi bi-leaf me-2"></i>DragonStone
                 </a>
                 <nav class="d-none d-md-flex">
@@ -306,6 +315,10 @@ if (isset($_SESSION['Id'] ) && $_SESSION['Auth']) {
     <p class="text-muted mb-1">Required: 500 points</p>
   </div>
 </div>
+<footer>
+    <p>© 2025 DragonStone</p>
+    <a href="#">Home</a> • <a href="#">Shop</a> • <a href="#">Community</a>
+</footer>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"></script>
 <script>

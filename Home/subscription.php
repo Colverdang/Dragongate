@@ -296,7 +296,7 @@ footer a:hover { color:#fff; }
     <header class="bg-foreground text-background py-3">
         <div class="container">
             <div class="d-flex justify-content-between align-items-center">
-                <a href="/" class="text-xl fw-bold text-background">
+                <a href="Homepage.php" class="text-xl fw-bold text-background">
                     <i class="bi bi-leaf me-2"></i>DragonStone
                 </a>
                 <nav class="d-none d-md-flex">

@@ -125,6 +125,15 @@ session_start();
             align-items: center;
             justify-content: center;
         }
+        footer {
+            background:#222;
+            color:#fff;
+            text-align:center;
+            padding:20px;
+            margin-top:60px;
+        }
+        footer a { color:#bbb; text-decoration:none; }
+        footer a:hover { color:#fff; }
         footer a {
             color: rgba(248, 249, 250, 0.7);
             text-decoration: none;
@@ -259,57 +268,12 @@ session_start();
         </div>
     </section>
 
-    <!-- Footer (same as previous) -->
-    <footer class="bg-foreground text-background py-5">
-        <div class="container">
-            <div class="row g-4">
-                <div class="col-md-3">
-                    <div class="d-flex align-items-center gap-2 mb-3">
-                        <i class="bi bi-leaf"></i>
-                        <span class="fs-4 fw-bold">DragonStone</span>
-                    </div>
-                    <p class="small opacity-75">
-                        Making sustainable living accessible and aspirational for everyone.
-                    </p>
-                </div>
-                <div class="col-md-3">
-                    <h4 class="fw-semibold mb-3">Shop</h4>
-                    <ul class="list-unstyled small opacity-75">
-                        <li><a href="/products">All Products</a></li>
-                        <li><a href="/products?category=cleaning">Cleaning</a></li>
-                        <li><a href="/products?category=kitchen">Kitchen</a></li>
-                        <li><a href="/products?category=decor">Home Décor</a></li>
-                    </ul>
-                </div>
-                <div class="col-md-3">
-                    <h4 class="fw-semibold mb-3">Company</h4>
-                    <ul class="list-unstyled small opacity-75">
-                        <li><a href="/about">About Us</a></li>
-                        <li><a href="#">Our Impact</a></li>
-                        <li><a href="#">Sustainability</a></li>
-                        <li><a href="#">Contact</a></li>
-                    </ul>
-                </div>
-                <div class="col-md-3">
-                    <h4 class="fw-semibold mb-3">Connect</h4>
-                    <ul class="list-unstyled small opacity-75">
-                        <li><a href="#">Instagram</a></li>
-                        <li><a href="#">Facebook</a></li>
-                        <li><a href="#">Twitter</a></li>
-                        <li><a href="#">Newsletter</a></li>
-                    </ul>
-                </div>
-            </div>
-            <hr class="border opacity-20 my-4">
-            <div class="text-center small opacity-75">
-                <p>&copy; 2025 DragonStone. All rights reserved. Built with care for our planet.</p>
-            </div>
-        </div>
+    <footer>
+        <p>© 2025 DragonStone</p>
+        <a href="#">Home</a> • <a href="#">Shop</a> • <a href="#">Community</a>
     </footer>
 
-    <!-- Bootstrap 5 JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-    <!-- Custom JavaScript -->
     <script>
         let cartTotal = 0;
         let selectedCategory = 'All';

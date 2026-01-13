@@ -317,7 +317,7 @@ session_start();
 <header class="bg-foreground text-background py-3">
     <div class="container">
         <div class="d-flex justify-content-between align-items-center">
-            <a href="/" class="text-xl fw-bold text-background">
+            <a href="Homepage.php" class="text-xl fw-bold text-background">
                 <i class="bi bi-leaf me-2"></i>DragonStone
             </a>
             <nav class="d-none d-md-flex">
@@ -480,6 +480,10 @@ session_start();
 
 
 </div>
+<footer>
+    <p>2025 DragonStone</p>
+    <a href="#">Home</a> • <a href="#">Shop</a> • <a href="#">Community</a>
+</footer>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 <script>
