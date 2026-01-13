@@ -2,9 +2,6 @@
 session_start();
 include('background_db_connector.php');
 
-
-header('Content-Type: application/json');
-
 $userId = $_SESSION['Id'];
 
 $SQLStr = "

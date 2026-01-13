@@ -591,7 +591,7 @@ async function loadChallenges() {
 
 
         function loadPosts() {
-            fetch('../getPosts.php')
+            fetch('../getposts.php')
                 .then(res => res.json())
                 .then(posts => {
                     postsContainer.innerHTML = '';
