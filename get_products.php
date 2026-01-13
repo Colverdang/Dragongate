@@ -1,7 +1,7 @@
 <?php
 require('background_db_connector.php'); // adjust path if needed
 
-$sql = "SELECT Id, Name, Description, Price, Catagory, Image FROM products";
+$sql = "SELECT Id, Name, Description, Price, Catagory, Image, Carbon FROM products";
 $result = $DbConnectionObj->query($sql);
 
 $products = [];
@@ -16,12 +16,13 @@ while($row = $result->fetch_assoc()) {
     ];
 
     $products[] = [
-        "id" => $row["Id"],
-        "name" => $row["Name"],
-        "description" => $row["Description"],
-        "price" => $row["Price"],
-        "category" => isset($categoryMap[$row["Catagory"]]) ? $categoryMap[$row["Catagory"]] : "Other",
-        "image" => $row["Image"] ? $row["Image"] : "https://via.placeholder.com/400x250?text=No+Image"
+        "Id" => $row["Id"],
+        "Name" => $row["Name"],
+        "Description" => $row["Description"],
+        "Price" => $row["Price"],
+        "Category" => isset($categoryMap[$row["Catagory"]]) ? $categoryMap[$row["Catagory"]] : "Other",
+        "Image" => $row["Image"] ? $row["Image"] : "https://via.placeholder.com/400x250?text=No+Image",
+        "CarbonFootprint" => $row["Carbon"]
     ];
 }
 

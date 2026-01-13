@@ -21,8 +21,10 @@
 
   <div class="sidebar">
     <a href="#" onclick="showSection('users')">Manage Users</a>
-    <a href="#" onclick="showSection('categories')">Manage Categories</a>
     <a href="#" onclick="showSection('products')">Manage Products</a>
+    <a href="#" onclick="showSection('challenges')">Manage Challenges</a>
+    <a href="#" onclick="showSection('employees')">Manage Employees</a>
+    <a href="#" onclick="showSection('orders')">Orders</a>
   </div>
 
   <div class="content">
@@ -56,6 +58,34 @@
         <tbody id="productTable"></tbody>
       </table>
     </div>
+
+      <!-- Challenges SECTION -->
+      <div id="challengesSection" style="display:none;">
+          <h2>Challenges</h2>
+          <button class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#addChallengesModal">Add Challenges</button>
+          <table class="table table-bordered table-striped">
+              <thead><tr><th>Title</th><th>Description</th><th>Points</th><th>Actions</th></tr></thead>
+              <tbody id="challengesTable"></tbody>
+          </table>
+      </div>
+
+      <!-- Employee SECTION -->
+      <div id="employeeSection" style="display:none;">
+          <h2>Employees</h2>
+          <button class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#addEmployeeModal">Add Employee</button>
+          <table class="table table-bordered table-striped">
+              <thead><tr><th>Name</th><th>Role</th><th>Code</th><th>Actions</th></tr></thead>
+              <tbody id="employeeTable"></tbody>
+          </table>
+      </div>
+      <!-- Order SECTION -->
+      <div id="ordersSection" style="display:none;">
+          <h2>Orders</h2>
+          <table class="table table-bordered table-striped">
+              <thead><tr><th>User</th><th>Amount</th></tr></thead>
+              <tbody id="ordersTable"></tbody>
+          </table>
+      </div>
 
   </div>
 
@@ -172,7 +202,14 @@
             <div class="mb-3">
               <label class="form-label">Category</label>
               <select class="form-select" id="productCategory" required>
-                <option value="">-- Select Category --</option>
+                  <option value="">-- Select Category --</option>
+                  <option value="0">-- Cleaning & Household Supplies --</option>
+                  <option value="1">-- Kitchen & Dining --</option>
+                  <option value="2">-- Home Décor & Living --</option>
+                  <option value="3">-- Bathroom & Personal Care --</option>
+                  <option value="4">-- Lifestyle & Wellness --</option>
+                  <option value="5">-- Kids & Pets --</option>
+                  <option value="6">-- Outdoor & Garden --</option>
               </select>
             </div>
             <div class="mb-3">
@@ -193,17 +230,289 @@
     </div>
   </div>
 
+<!--  //Add Challenge-->
+  <div class="modal fade" id="addChallengesModal" tabindex="-1" aria-hidden="true">
+      <div class="modal-dialog">
+          <div class="modal-content">
+
+              <div class="modal-header">
+                  <h5 class="modal-title">Add Challenge</h5>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+              </div>
+
+              <div class="modal-body">
+                  <form id="challengeForm">
+
+                      <div class="mb-3">
+                          <label class="form-label">Title</label>
+                          <input
+                                  type="text"
+                                  class="form-control"
+                                  id="challengeTitle"
+                                  placeholder="Enter challenge title"
+                                  required
+                          >
+                      </div>
+
+                      <div class="mb-3">
+                          <label class="form-label">Description</label>
+                          <textarea
+                                  class="form-control"
+                                  id="challengeDesc"
+                                  rows="3"
+                                  placeholder="Describe the challenge"
+                                  required
+                          ></textarea>
+                      </div>
+
+                      <div class="mb-3">
+                          <label class="form-label">Points</label>
+                          <input
+                                  type="number"
+                                  class="form-control"
+                                  id="challengePoints"
+                                  min="1"
+                                  placeholder="Points awarded"
+                                  required
+                          >
+                      </div>
+
+                  </form>
+              </div>
+
+              <div class="modal-footer">
+                  <button
+                          type="button"
+                          class="btn btn-secondary"
+                          data-bs-dismiss="modal">
+                      Cancel
+                  </button>
+
+                  <button
+                          type="button"
+                          class="btn btn-primary"
+                          onclick="saveChallenge()">
+                      Save Challenge
+                  </button>
+              </div>
+
+          </div>
+      </div>
+  </div>
+
+<!--  //VIEW CHALLENG MODAL-->
+  <div class="modal fade" id="viewChallengeModal" tabindex="-1" aria-hidden="true">
+      <div class="modal-dialog">
+          <div class="modal-content">
+
+              <div class="modal-header">
+                  <h5 class="modal-title">View Challenge</h5>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+              </div>
+
+              <div class="modal-body">
+
+                  <!-- Hidden index for JS -->
+                  <input type="hidden" id="editChallengeIndex">
+
+                  <div class="mb-3">
+                      <label class="form-label">Title</label>
+                      <input
+                              type="text"
+                              class="form-control cField"
+                              id="viewChallengeTitle"
+                      >
+                  </div>
+
+                  <div class="mb-3">
+                      <label class="form-label">Description</label>
+                      <textarea
+                              class="form-control cField"
+                              id="viewChallengeDesc"
+                              rows="3"
+                      ></textarea>
+                  </div>
+
+                  <div class="mb-3">
+                      <label class="form-label">Points</label>
+                      <input
+                              type="number"
+                              class="form-control cField"
+                              id="viewChallengePoints"
+                              min="0"
+                      >
+                  </div>
+
+              </div>
+
+              <div class="modal-footer">
+                  <button
+                          type="button"
+                          class="btn btn-secondary"
+                          data-bs-dismiss="modal">
+                      Close
+                  </button>
+
+                  <button
+                          type="button"
+                          class="btn btn-warning"
+                          id="enableChallengeEditBtn"
+                          onclick="enableChallengeEditing()">
+                      Edit
+                  </button>
+
+                  <button
+                          type="button"
+                          class="btn btn-success"
+                          id="saveChallengeChangesBtn"
+                          onclick="saveChallengeChanges()">
+                      Save Changes
+                  </button>
+              </div>
+
+          </div>
+      </div>
+  </div>
+
+  <div class="modal fade" id="addEmployeeModal" tabindex="-1">
+      <div class="modal-dialog">
+          <div class="modal-content">
+
+              <div class="modal-header">
+                  <h5 class="modal-title">Add Employee</h5>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+              </div>
+
+              <div class="modal-body">
+                  <form id="employeeForm">
+
+                      <div class="mb-3">
+                          <label class="form-label">Name</label>
+                          <input type="text" id="employeeName" class="form-control" required>
+                      </div>
+
+                      <div class="mb-3">
+                          <label class="form-label">Surname</label>
+                          <input type="text" id="employeeSurname" class="form-control" required>
+                      </div>
+
+                      <div class="mb-3">
+                          <label class="form-label">Email</label>
+                          <input type="email" id="employeeEmail" class="form-control" required>
+                      </div>
+
+                      <div class="mb-3">
+                          <label class="form-label">Role</label>
+                          <select id="employeeRole" class="form-select" required>
+                              <option value="">Select role</option>
+                              <option value="1">Admin</option>
+                              <option value="2">Manager</option>
+                              <option value="3">Staff</option>
+                          </select>
+                      </div>
+
+                      <div class="mb-3">
+                          <label class="form-label">Code</label>
+                          <input type="number" id="employeeCode" class="form-control" required>
+                      </div>
+
+                  </form>
+              </div>
+
+              <div class="modal-footer">
+                  <button class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                  <button class="btn btn-primary" onclick="saveEmployee()">Save Employee</button>
+              </div>
+
+          </div>
+      </div>
+  </div>
+  <div class="modal fade" id="viewEmployeeModal" tabindex="-1">
+      <div class="modal-dialog">
+          <div class="modal-content">
+
+              <div class="modal-header">
+                  <h5 class="modal-title">Employee Details</h5>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+              </div>
+
+              <div class="modal-body">
+
+                  <input type="hidden" id="editEmployeeIndex">
+
+                  <div class="mb-3">
+                      <label class="form-label">Name</label>
+                      <input type="text" id="viewEmployeeName" class="form-control eField">
+                  </div>
+
+                  <div class="mb-3">
+                      <label class="form-label">Surname</label>
+                      <input type="text" id="viewEmployeeSurname" class="form-control eField">
+                  </div>
+
+                  <div class="mb-3">
+                      <label class="form-label">Email</label>
+                      <input type="email" id="viewEmployeeEmail" class="form-control eField">
+                  </div>
+
+                  <div class="mb-3">
+                      <label class="form-label">Role</label>
+                      <select id="viewEmployeeRole" class="form-select eField">
+                          <option value="1">Admin</option>
+                          <option value="2">Manager</option>
+                          <option value="3">Staff</option>
+                      </select>
+                  </div>
+
+                  <div class="mb-3">
+                      <label class="form-label">Code</label>
+                      <input type="number" id="viewEmployeeCode" class="form-control eField">
+                  </div>
+
+              </div>
+
+              <div class="modal-footer">
+                  <button id="enableEmployeeEditBtn"
+                          class="btn btn-warning"
+                          onclick="enableEmployeeEditing()">
+                      Edit
+                  </button>
+
+                  <button id="saveEmployeeChangesBtn"
+                          class="btn btn-success"
+                          style="display:none"
+                          onclick="saveEmployeeChanges()">
+                      Save Changes
+                  </button>
+
+                  <button class="btn btn-secondary" data-bs-dismiss="modal">
+                      Close
+                  </button>
+              </div>
+
+          </div>
+      </div>
+  </div>
+
+
+
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 
 <script>
 let users = [];
 let categories = [];
 let products = [];
+let challenges = [];
+let orders = [];
+let employees = [];
 
 function showSection(section) {
   document.getElementById("usersSection").style.display = section === "users" ? "block" : "none";
   document.getElementById("categoriesSection").style.display = section === "categories" ? "block" : "none";
   document.getElementById("productsSection").style.display = section === "products" ? "block" : "none";
+  document.getElementById("challengesSection").style.display = section === "challenges" ? "block" : "none";
+  document.getElementById("employeeSection").style.display = section === "employees" ? "block" : "none";
+  document.getElementById("ordersSection").style.display = section === "orders" ? "block" : "none";
 }
 
 // USERS
@@ -301,6 +610,139 @@ function saveCategory() {
   })
   .catch(err => console.error("Error adding category:", err));
 }
+//Challenges
+
+function loadChallengesFromDB() {
+    fetch('get_challenges.php')
+        .then(res => res.json())
+        .then(data => {
+            challenges = data.map(c => ({
+                id: c.Id,
+                title: c.Title,
+                desc: c.Description,
+                points: parseInt(c.Points)
+            }));
+            renderChallenges();
+        })
+        .catch(err => console.error("Failed to load challenges:", err));
+}
+
+function renderChallenges() {
+    const table = document.getElementById("challengesTable");
+    table.innerHTML = challenges.map((c, i) => `
+    <tr onclick="openChallengeModal(${i})" style="cursor:pointer;">
+      <td>${escapeHtml(c.title)}</td>
+      <td>${escapeHtml(c.desc)}</td>
+      <td>${c.points}</td>
+      <td>
+        <button class="btn btn-danger btn-sm"
+          onclick="event.stopPropagation(); deleteChallenge(${i})">
+          Delete
+        </button>
+      </td>
+    </tr>
+  `).join('');
+}
+
+function openChallengeModal(index) {
+    const c = challenges[index];
+
+    document.getElementById("editChallengeIndex").value = index;
+    document.getElementById("viewChallengeTitle").value = c.title;
+    document.getElementById("viewChallengeDesc").value = c.desc;
+    document.getElementById("viewChallengePoints").value = c.points;
+
+    disableChallengeFields();
+    new bootstrap.Modal(document.getElementById('viewChallengeModal')).show();
+}
+
+function disableChallengeFields() {
+    document.querySelectorAll('.cField').forEach(f => f.disabled = true);
+    document.getElementById("enableChallengeEditBtn").style.display = 'inline-block';
+    document.getElementById("saveChallengeChangesBtn").style.display = 'none';
+}
+
+function enableChallengeEditing() {
+    document.querySelectorAll('.cField').forEach(f => f.disabled = false);
+    document.getElementById("enableChallengeEditBtn").style.display = 'none';
+    document.getElementById("saveChallengeChangesBtn").style.display = 'inline-block';
+}
+function saveChallengeChanges() {
+    const index = document.getElementById("editChallengeIndex").value;
+
+    const formData = new FormData();
+    formData.append("id", challenges[index].id);
+    formData.append("title", document.getElementById("viewChallengeTitle").value);
+    formData.append("description", document.getElementById("viewChallengeDesc").value);
+    formData.append("points", document.getElementById("viewChallengePoints").value);
+
+    fetch("update_challenge.php", {
+        method: "POST",
+        body: formData
+    })
+        .then(res => res.json())
+        .then(data => {
+            if (data.success) {
+                loadChallengesFromDB();
+                disableChallengeFields();
+            } else {
+                alert(data.error || "Failed to update challenge");
+            }
+        });
+}
+function saveChallenge() {
+    const title = document.getElementById("challengeTitle").value.trim();
+    const desc = document.getElementById("challengeDesc").value.trim();
+    const points = document.getElementById("challengePoints").value;
+
+    if (!title || !desc || !points) {
+        return alert("All fields are required");
+    }
+
+    const formData = new FormData();
+    formData.append("title", title);
+    formData.append("description", desc);
+    formData.append("points", points);
+
+    fetch("add_challenge.php", {
+        method: "POST",
+        body: formData
+    })
+        .then(res => res.json())
+        .then(data => {
+            if (data.success) {
+                loadChallengesFromDB();
+                document.getElementById("challengeForm").reset();
+                bootstrap.Modal.getInstance(
+                    document.getElementById("addChallengesModal")
+                ).hide();
+            } else {
+                alert(data.error || "Failed to add challenge");
+            }
+        })
+        .catch(err => console.error("Error adding challenge:", err));
+}
+
+function deleteChallenge(index) {
+    if (!confirm("Delete this challenge?")) return;
+
+    fetch("delete_challenge.php", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ id: challenges[index].id })
+    })
+        .then(res => res.json())
+        .then(data => {
+            if (data.success) {
+                loadChallengesFromDB();
+            } else {
+                alert(data.error || "Failed to delete challenge");
+            }
+        });
+}
+
+
+
 
 // PRODUCTS
 function loadProductsFromDB() {
@@ -316,6 +758,7 @@ function loadProductsFromDB() {
         imageUrl: p.Image || null,
         imageName: p.image_name || ''
       }));
+        console.log(products)
       renderProducts();
     })
     .catch(err => console.error("Failed to load products:", err));
@@ -416,6 +859,12 @@ function saveProduct() {
   formData.append('category', category);
   formData.append('carbon', carbon);
   if(imageInput.files[0]) formData.append('image', imageInput.files[0]);
+    console.log('Name:', formData.get('name'));
+    console.log('Description:', formData.get('description'));
+    console.log('Price:', formData.get('price'));
+    console.log('Category:', formData.get('category'));
+    console.log('Carbon:', formData.get('carbon'));
+
 
   fetch('add_product.php', {
     method: 'POST',
@@ -434,6 +883,162 @@ function saveProduct() {
   .catch(err => console.error("Error adding product:", err));
 }
 
+//ORDERS
+
+function loadOrdersFromDB() {
+    fetch('get_orders.php')
+        .then(res => res.json())
+        .then(data => {
+            orders = data.map(c => ({
+                id: c.id,
+                user: c.user,
+                amount: c.amount
+            }));
+            renderOrders();
+        })
+        .catch(err => console.error("Failed to load challenges:", err));
+}
+
+function renderOrders() {
+    const table = document.getElementById("ordersTable");
+    table.innerHTML = orders.map((c, i) => `
+    <tr>
+      <td>${escapeHtml(c.user)}</td>
+      <td>${escapeHtml(c.amount)}</td>
+    </tr>
+  `).join('');
+}
+
+
+//EMPLOYEES
+
+function loadEmployeesFromDB() {
+    fetch('get_employees.php')
+        .then(res => res.json())
+        .then(data => {
+            employees = data.map(e => ({
+                id: e.Id,
+                name: e.Name,
+                surname: e.Surname,
+                email: e.Email,
+                role: e.Role,
+                code: e.Code
+            }));
+            console.log(employees);
+            renderEmployees();
+        })
+        .catch(err => console.error("Failed to load employees:", err));
+}
+function renderEmployees() {
+    const table = document.getElementById("employeeTable");
+    table.innerHTML = employees.map((e, i) => `
+    <tr onclick="openEmployeeModal(${i})" style="cursor:pointer;">
+      <td>${escapeHtml(e.name)} ${escapeHtml(e.surname)}</td>
+      <td>${escapeHtml(e.role)}</td>
+      <td>${escapeHtml(e.code)}</td>
+      <td>
+        <button class="btn btn-danger btn-sm"
+          onclick="event.stopPropagation(); deleteEmployee(${i})">
+          Delete
+        </button>
+      </td>
+    </tr>
+  `).join('');
+}
+
+function openEmployeeModal(index) {
+    const e = employees[index];
+    document.getElementById("editEmployeeIndex").value = index;
+
+    document.getElementById("viewEmployeeName").value = e.name;
+    document.getElementById("viewEmployeeSurname").value = e.surname;
+    document.getElementById("viewEmployeeEmail").value = e.email;
+    document.getElementById("viewEmployeeRole").value = e.role;
+    document.getElementById("viewEmployeeCode").value = e.code;
+
+    disableEmployeeFields();
+
+    new bootstrap.Modal(
+        document.getElementById('viewEmployeeModal')
+    ).show();
+}
+
+function disableEmployeeFields() {
+    document.querySelectorAll('.eField').forEach(f => f.disabled = true);
+    document.getElementById("enableEmployeeEditBtn").style.display = 'inline-block';
+    document.getElementById("saveEmployeeChangesBtn").style.display = 'none';
+}
+
+function enableEmployeeEditing() {
+    document.querySelectorAll('.eField').forEach(f => f.disabled = false);
+    document.getElementById("enableEmployeeEditBtn").style.display = 'none';
+    document.getElementById("saveEmployeeChangesBtn").style.display = 'inline-block';
+}
+
+function saveEmployeeChanges() {
+    const index = document.getElementById("editEmployeeIndex").value;
+
+    const formData = new FormData();
+    formData.append("id", employees[index].id);
+    formData.append("name", document.getElementById("viewEmployeeName").value);
+    formData.append("surname", document.getElementById("viewEmployeeSurname").value);
+    formData.append("email", document.getElementById("viewEmployeeEmail").value);
+    formData.append("role", document.getElementById("viewEmployeeRole").value);
+    formData.append("code", document.getElementById("viewEmployeeCode").value);
+
+    fetch("update_employee.php", {
+        method: "POST",
+        body: formData
+    })
+        .then(res => res.json())
+        .then(data => {
+            if (data.success) {
+                loadEmployeesFromDB();
+                disableEmployeeFields();
+            } else {
+                alert(data.error || "Failed to update employee");
+            }
+        });
+}
+
+function saveEmployee() {
+    const name = document.getElementById("employeeName").value.trim();
+    const surname = document.getElementById("employeeSurname").value.trim();
+    const email = document.getElementById("employeeEmail").value.trim();
+    const role = document.getElementById("employeeRole").value;
+    const code = document.getElementById("employeeCode").value;
+
+    if (!name || !surname || !email || !role || !code)
+        return alert("All fields are required");
+
+    const formData = new FormData();
+    formData.append("name", name);
+    formData.append("surname", surname);
+    formData.append("email", email);
+    formData.append("role", role);
+    formData.append("code", code);
+
+    fetch("add_employee.php", {
+        method: "POST",
+        body: formData
+    })
+        .then(res => res.json())
+        .then(data => {
+            if (data.success) {
+                loadEmployeesFromDB();
+                document.getElementById("employeeForm").reset();
+                bootstrap.Modal
+                    .getInstance(document.getElementById('addEmployeeModal'))
+                    .hide();
+            } else {
+                alert(data.error || "Failed to add employee");
+            }
+        })
+        .catch(err => console.error("Error adding employee:", err));
+}
+
+
+
 // Utilities
 function escapeHtml(str) {
   if (!str) return '';
@@ -445,6 +1050,9 @@ function escapeHtmlAttr(str) { return escapeHtml(str).replace(/"/g, '&quot;'); }
 window.addEventListener('DOMContentLoaded', () => {
   loadCategoriesFromDB(); // fetch categories from DB
   loadProductsFromDB();   // fetch products from DB
+  loadChallengesFromDB();   // fetch products from DB
+    loadOrdersFromDB();
+    loadEmployeesFromDB()
   renderUsers();           // render users if any
   showSection('users');
 });

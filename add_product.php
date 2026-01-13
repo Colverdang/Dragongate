@@ -13,8 +13,8 @@ $price = $_POST['price'] ?? null;
 $category = $_POST['category'] ?? null;
 $carbon = $_POST['carbon'] ?? null;
 
-if (!$name || !$description || !$price || !$category || !$carbon) {
-    echo json_encode(['success' => false, 'error' => 'Missing required fields']);
+if (!$name || !$description || !$price || $category === "" || !$carbon) {
+    echo json_encode(['success' => false, 'error' => 'Missing required fields', 'name' => $name, 'description' => $description, 'price' => $price, 'category' => $category, 'carbon' => $carbon]);
     exit;
 }
 
@@ -45,7 +45,7 @@ if (isset($_FILES['image']) && $_FILES['image']['error'] === UPLOAD_ERR_OK) {
 }
 
 // Insert product using prepared statement
-$stmt = $DbConnectionObj->prepare("INSERT INTO product (Name, Description, Price, Category, CarbonFootprint, Image) VALUES (?, ?, ?, ?, ?, ?)");
+$stmt = $DbConnectionObj->prepare("INSERT INTO products (Name, Description, Price, Catagory, Carbon, Image) VALUES (?, ?, ?, ?, ?, ?)");
 if (!$stmt) {
     echo json_encode(['success' => false, 'error' => $DbConnectionObj->error]);
     exit;
