@@ -10,7 +10,7 @@ if (!isset($_SESSION['Auth']) || !$_SESSION['Auth']) {
 $userId = $_SESSION['Id'];
 
 // 1. Find active order session
-$SQL = "SELECT Id FROM Cart WHERE UserId = ? AND state = 1 ORDER BY Id DESC LIMIT 1";
+$SQL = "SELECT Id FROM cart WHERE UserId = ? AND state = 1 ORDER BY Id DESC LIMIT 1";
 $stmt = $DbConnectionObj->prepare($SQL);
 $stmt->bind_param('i', $userId);
 $stmt->execute();

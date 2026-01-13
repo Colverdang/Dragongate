@@ -13,7 +13,7 @@ $userId = (int)$_SESSION['Id'];
 
 $data = json_decode(file_get_contents("php://input"), true);
 $discountApplied = !empty($data['discountApplied']);
-$subtotal = $data['price'];
+$subtotal = (float)$data['price'];
 
 
 mysqli_begin_transaction($DbConnectionObj);
@@ -22,7 +22,7 @@ try {
 
 
     $stmt = mysqli_prepare($DbConnectionObj,
-        "SELECT ecopoints FROM User WHERE Id = ?"
+        "SELECT EcoPoints FROM user WHERE Id = ?"
     );
     mysqli_stmt_bind_param($stmt, "i", $userId);
     mysqli_stmt_execute($stmt);

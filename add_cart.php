@@ -29,7 +29,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     ];
 
     // 1. Check if user already has active order session
-    $SQLStr = 'SELECT Id FROM Cart WHERE userid = ? AND state = 1 ORDER BY Id DESC LIMIT 1';
+    $SQLStr = 'SELECT Id FROM cart WHERE userid = ? AND state = 1 ORDER BY Id DESC LIMIT 1';
     $StmtObj = $DbConnectionObj->prepare($SQLStr);
     $StmtObj->bind_param('i', $UserId);
     $StmtObj->execute();

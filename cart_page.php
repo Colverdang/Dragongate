@@ -80,7 +80,15 @@ if (empty($OrderId)) {
 </div>
 
 <div class='text-end'>
-<a href='checkout.php' class='btn btn-primary btn-lg'>Proceed to Checkout</a>
+    <?php if (empty($products)): ?>
+        <button class="btn btn-primary btn-lg" disabled>
+            Proceed to Checkout
+        </button>
+    <?php else: ?>
+        <a href='checkout.php' class='btn btn-primary btn-lg'>
+            Proceed to Checkout
+        </a>
+    <?php endif; ?>
 </div>
 </div>
 

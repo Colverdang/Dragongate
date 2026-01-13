@@ -60,7 +60,7 @@ $ecoPoints = $row['EcoPoints'] ?? 0;
         <form id="cardForm">
           <div class="mb-3">
             <label for="cardName" class="form-label">Name on Card</label>
-            <input type="text" class="form-control" id="cardName" required>
+            <input type="text" class="form-control" id="cardName" required pattern="[A-Za-z\s]+" placeholder="John Doe">>
           </div>
           <div class="mb-3">
             <label for="cardNumber" class="form-label">Card Number</label>
@@ -129,28 +129,20 @@ $ecoPoints = $row['EcoPoints'] ?? 0;
         });
     }
 
-document.getElementById('submitPayment').addEventListener('click', () => {
-    const form = document.getElementById('cardForm');
-    if (!form.checkValidity()) {
-        form.reportValidity();
-        return;
-    }
-    document.getElementById('paymentMsg').classList.remove('d-none');
-
-
-    setTimeout(() => {
-        const modal = bootstrap.Modal.getInstance(document.getElementById('paymentModal'));
-        modal.hide();
-    }, 1500);
-});
 
 const cardNumberInput = document.getElementById('cardNumber');
 const cvvInput = document.getElementById('cvv');
 const expiryInput = document.getElementById('expiry');
+const cardNameInput = document.getElementById('cardName');
 
 cardNumberInput.addEventListener('input', () => {
     cardNumberInput.value = cardNumberInput.value.replace(/\D/g, '');
 });
+
+cardNameInput.addEventListener('input', () => {
+    cardNameInput.value = cardNameInput.value.replace(/[^a-zA-Z\s]/g, '');
+});
+
 
 // Allow only 3 digits for CVV
 cvvInput.addEventListener('input', () => {
@@ -168,27 +160,36 @@ expiryInput.addEventListener('input', () => {
 
 
 function Pay() {
+    const form = document.getElementById('cardForm');
+
+    //
+    if (!form.checkValidity()) {
+        form.reportValidity();
+        return;
+    }
+
     const price = document.getElementById('total').textContent;
-    console.log(price);
-fetch('pay.php', {
-    method: 'POST',
-    headers: {
-        'Content-Type': 'application/json'
-    },
-    body: JSON.stringify({
-        discountApplied: discountApplied,
-        price: price
+
+    fetch('pay.php', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            discountApplied: discountApplied,
+            price: price
+        })
     })
-})
-    .then(res => res.json())
-    .then(data => {
-        if (data.success) {
-            window.location.href = "Home/Homepage.php";
-        } else {
-            alert(data.message || 'Payment failed');
-        }
-    });
+        .then(res => res.json())
+        .then(data => {
+            if (data.success) {
+                window.location.href = "Home/Homepage.php";
+            } else {
+                alert(data.message || 'Payment failed');
+            }
+        });
 }
+
 
 
 </script>
