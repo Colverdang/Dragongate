@@ -14,8 +14,8 @@ SELECT
     c.Points,
     ac.Id AS ActiveId,
     ac.Status
-FROM Challenges c
-LEFT JOIN ActiveChallenges ac
+FROM challenges c
+LEFT JOIN activechallenges ac
     ON c.Id = ac.ChallengeId
     AND ac.UserId = ?
 ";

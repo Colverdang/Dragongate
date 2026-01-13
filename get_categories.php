@@ -4,7 +4,7 @@ include('background_db_connector.php');
 header('Content-Type: application/json');
 
 // Prepare the SQL statement
-$stmt = $DbConnectionObj->prepare("SELECT Id, Name, Description FROM Category");
+$stmt = $DbConnectionObj->prepare("SELECT Id, Name, Description FROM category");
 $stmt->execute();
 
 // Get the result

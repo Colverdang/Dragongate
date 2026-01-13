@@ -7,7 +7,7 @@ $points = $_POST['points'];
 $userId   = $_SESSION['Id'];
 
 $SQLStr = "
-UPDATE ActiveChallenges
+UPDATE activechallenges
 SET Status = 'Completed'
 WHERE Id = ? AND UserId = ?
 ";
@@ -19,7 +19,7 @@ try {
     $StmtObj->execute();
 
     $stmt2 = $DbConnectionObj->prepare("
-    UPDATE User SET EcoPoints = EcoPoints + ? WHERE Id = ?
+    UPDATE user SET EcoPoints = EcoPoints + ? WHERE Id = ?
 ");
     $stmt2->bind_param('ii', $points,$userId);
     try {

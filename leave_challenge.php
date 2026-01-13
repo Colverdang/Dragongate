@@ -6,7 +6,7 @@ $activeId = $_POST['active_id'];
 $userId   = $_SESSION['Id'];
 
 $SQLStr = "
-UPDATE ActiveChallenges
+UPDATE activechallenges
 SET Status = 'Abandoned'
 WHERE Id = ? AND UserId = ?
 ";

@@ -6,7 +6,7 @@ $challengeId = $_POST['challenge_id'];
 $userId = $_SESSION['Id'];
 
 $SQLStr = "
-INSERT INTO ActiveChallenges (ChallengeId, UserId, Status)
+INSERT INTO activechallenges (ChallengeId, UserId, Status)
 VALUES (?, ?, 'Active')
 ";
 

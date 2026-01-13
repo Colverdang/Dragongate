@@ -7,7 +7,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $EmailAddressStr = $_POST['email'] ?? "null";
     $PasswordStr = $_POST['password'] ?? "null";
 
-    $SQLStr = 'SELECT Id, Password FROM User WHERE Email = ?';
+    $SQLStr = 'SELECT Id, Password FROM user WHERE Email = ?';
     $StmtObj = $DbConnectionObj->prepare($SQLStr);
     $StmtObj->bind_param('s',  $EmailAddressStr);
     try {

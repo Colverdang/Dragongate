@@ -39,7 +39,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     // 2. If no active session, create one
     if (!$OrderSessionId) {
-        $SQLStr = 'INSERT INTO Cart (UserId, state) VALUES (?, 1)';
+        $SQLStr = 'INSERT INTO cart (UserId, state) VALUES (?, 1)';
         $StmtObj = $DbConnectionObj->prepare($SQLStr);
         $StmtObj->bind_param('i', $UserId);
         $StmtObj->execute();

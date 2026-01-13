@@ -6,7 +6,7 @@ $userId = $_SESSION['Id'];
 $active = 1;
 
 // 1) Check for active order session
-$SQLStr = "SELECT Id FROM Cart WHERE UserId = ? AND State = ?";
+$SQLStr = "SELECT Id FROM cart WHERE UserId = ? AND State = ?";
 $StmtObj = $DbConnectionObj->prepare($SQLStr);
 $StmtObj->bind_param('ii', $userId, $active);
 $StmtObj->execute();
@@ -24,7 +24,7 @@ if (empty($OrderId)) {
     // 2) Load cart items
     $sql = "SELECT P.Id, C.Id AS cartitem_id, P.Name, P.Price, P.Carbon, P.Image
             FROM cartitem C
-            JOIN Products P ON C.productid = P.Id
+            JOIN products P ON C.productid = P.Id
             WHERE C.cartid = $OrderId AND C.active = 1";
 
     $result = $DbConnectionObj->query($sql);

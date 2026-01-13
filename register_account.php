@@ -31,7 +31,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     $HashedPassword = password_hash($PasswordStr, PASSWORD_DEFAULT);
 
-    $SQLStr = 'INSERT INTO User (name, surname, Email, Password) VALUES (?,?,?,?)';
+    $SQLStr = 'INSERT INTO user (name, surname, Email, Password) VALUES (?,?,?,?)';
     $StmtObj = $DbConnectionObj->prepare($SQLStr);
     $StmtObj->bind_param('ssss', $FirstNameStr, $SurnameStr, $EmailAddressStr, $HashedPassword);
     try {

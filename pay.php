@@ -10,9 +10,7 @@ if (!isset($_SESSION['Id'])) {
 
 $userId = (int)$_SESSION['Id'];
 
-/* -----------------------------
-   Read JSON body
------------------------------- */
+
 $data = json_decode(file_get_contents("php://input"), true);
 $discountApplied = !empty($data['discountApplied']);
 $subtotal = $data['price'];
@@ -22,11 +20,9 @@ mysqli_begin_transaction($DbConnectionObj);
 
 try {
 
-    /* -----------------------------
-       1. Get user's EcoPoints
-    ------------------------------ */
+
     $stmt = mysqli_prepare($DbConnectionObj,
-        "SELECT EcoPoints FROM User WHERE Id = ?"
+        "SELECT ecopoints FROM User WHERE Id = ?"
     );
     mysqli_stmt_bind_param($stmt, "i", $userId);
     mysqli_stmt_execute($stmt);
@@ -38,15 +34,10 @@ try {
 
     $ecoPoints = (int)$user['EcoPoints'];
 
-    /* -----------------------------
-       2. Calculate discount & points used
-    ------------------------------ */
     $discountPercent = $discountApplied ? floor($ecoPoints / 500) : 0;
     $pointsUsed = $discountPercent * 500;
 
-    /* -----------------------------
-       3. Get latest active cart
-    ------------------------------ */
+
     $stmt = mysqli_prepare($DbConnectionObj, "
         SELECT Id 
         FROM cart 
@@ -64,10 +55,7 @@ try {
 
     $cartId = (int)$cart['Id'];
 
-    /* -----------------------------
-       4. Calculate cart total
-       (adjust table/fields if needed)
-    ------------------------------ */
+
 //    $totalResult = mysqli_query($DbConnectionObj, "
 //        SELECT SUM(price * quantity) AS total
 //        FROM cartitems
@@ -83,9 +71,6 @@ try {
 
     $finalTotal = $subtotal - ($subtotal * ($discountPercent / 100));
 
-    /* -----------------------------
-       5. Insert order
-    ------------------------------ */
     $stmt = mysqli_prepare($DbConnectionObj, "
         INSERT INTO orders (userid, cartid, total)
         VALUES (?, ?, ?)
@@ -93,13 +78,11 @@ try {
     mysqli_stmt_bind_param($stmt, "iid", $userId, $cartId, $finalTotal);
     mysqli_stmt_execute($stmt);
 
-    /* -----------------------------
-       6. EcoPoints logic
-    ------------------------------ */
+
     if ($discountApplied && $pointsUsed > 0) {
         // Deduct used points
         $stmt = mysqli_prepare($DbConnectionObj, "
-            UPDATE User
+            UPDATE user
             SET EcoPoints = EcoPoints - ?
             WHERE Id = ?
         ");
@@ -108,7 +91,7 @@ try {
     } else {
         // Reward user
         $stmt = mysqli_prepare($DbConnectionObj, "
-            UPDATE User
+            UPDATE user
             SET EcoPoints = EcoPoints + 100
             WHERE Id = ?
         ");
@@ -116,9 +99,6 @@ try {
         mysqli_stmt_execute($stmt);
     }
 
-    /* -----------------------------
-       7. Close cart
-    ------------------------------ */
     $stmt = mysqli_prepare($DbConnectionObj,
         "UPDATE cart SET state = '0' WHERE Id = ?"
     );

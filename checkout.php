@@ -7,7 +7,7 @@ require('background_db_connector.php'); // DB connection
 $userId = $_SESSION['Id'];
 
 // Fetch EcoPoints from database
-$query = "SELECT EcoPoints FROM User WHERE id = $userId";
+$query = "SELECT EcoPoints FROM user WHERE id = $userId";
 $result = mysqli_query($DbConnectionObj, $query);
 $row = mysqli_fetch_assoc($result);
 $ecoPoints = $row['EcoPoints'] ?? 0;

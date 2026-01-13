@@ -43,7 +43,7 @@ if ($stmt->execute()) {
 $stmt->close();
 
 $stmt2 = $DbConnectionObj->prepare("
-    UPDATE User SET EcoPoints = EcoPoints + 50 WHERE Id = ?
+    UPDATE user SET EcoPoints = EcoPoints + 50 WHERE Id = ?
 ");
 $stmt2->bind_param('i', $userId);
 $stmt2->execute();

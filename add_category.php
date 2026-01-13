@@ -12,7 +12,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     }
 
     // Use prepared statement
-    $stmt = $DbConnectionObj->prepare("INSERT INTO Category (name, description) VALUES (?, ?)");
+    $stmt = $DbConnectionObj->prepare("INSERT INTO category (name, description) VALUES (?, ?)");
     if (!$stmt) {
         echo json_encode(['success' => false, 'error' => $DbConnectionObj->error]);
         exit;

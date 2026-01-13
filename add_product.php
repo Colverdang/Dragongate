@@ -46,7 +46,7 @@ if (isset($_FILES['image']) && $_FILES['image']['error'] === UPLOAD_ERR_OK) {
 }
 
 // Insert product using prepared statement
-$stmt = $DbConnectionObj->prepare("INSERT INTO Product (Name, Description, Price, Category, CarbonFootprint, Image) VALUES (?, ?, ?, ?, ?, ?)");
+$stmt = $DbConnectionObj->prepare("INSERT INTO product (Name, Description, Price, Category, CarbonFootprint, Image) VALUES (?, ?, ?, ?, ?, ?)");
 if (!$stmt) {
     echo json_encode(['success' => false, 'error' => $DbConnectionObj->error]);
     exit;
