@@ -112,7 +112,7 @@
 
         <div class="error" id="loginError"></div>
 
-        <button>Login</button>
+        <button id="login">Login</button>
 
         <div class="toggle-link">
             Don’t have an account?
@@ -124,9 +124,9 @@
     <div id="signupForm" class="form" style="display:none;">
         <h2>Sign Up</h2>
 
-        <input type="text" placeholder="Name">
-        <input type="text" placeholder="Surname">
-        <input type="email" placeholder="Email">
+        <input id="name" type="text" placeholder="Name">
+        <input id="surname" type="text" placeholder="Surname">
+        <input id="email" type="email" placeholder="Email">
 
         <div class="password-wrapper">
             <input type="password" id="password" placeholder="Confirm Password">
@@ -140,7 +140,7 @@
 
         <div class="error" id="signupError"></div>
 
-        <button>Sign Up</button>
+        <button id="signup">Sign Up</button>
 
         <div class="toggle-link">
             Already have an account?
