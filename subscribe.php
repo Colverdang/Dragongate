@@ -1,6 +1,5 @@
 <?php
 session_start();
-header('Content-Type: application/json');
 
 require('background_db_connector.php'); // must create $DbConnectionObj as mysqli
 

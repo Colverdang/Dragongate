@@ -2,7 +2,7 @@
 session_start();
 include('background_db_connector.php');
 
-header('Content-Type: application/json');
+
 
 if (!isset($_SESSION['Id'])) {
     echo json_encode(['success' => false, 'message' => 'Not authenticated']);

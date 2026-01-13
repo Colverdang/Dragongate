@@ -1,6 +1,5 @@
 <?php
 include('background_db_connector.php');
-header('Content-Type: application/json');
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $name = $_POST['name'] ?? null;

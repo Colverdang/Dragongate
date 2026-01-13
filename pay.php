@@ -1,6 +1,5 @@
 <?php
 session_start();
-header('Content-Type: application/json');
 require('background_db_connector.php');
 
 if (!isset($_SESSION['Id'])) {

@@ -1,6 +1,5 @@
 <?php
 require('background_db_connector.php'); // adjust path if needed
-header('Content-Type: application/json');
 
 $sql = "SELECT Id, Name, Description, Price, Catagory, Image FROM products";
 $result = $DbConnectionObj->query($sql);
