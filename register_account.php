@@ -13,21 +13,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $PasswordPatternStr = '/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_\-+={}[\]|:;,.<>?\/]).{8,}$/i';
     $PasswordMatchBool = $PasswordStr === $ConfirmPasswordStr;
 
-    if (!preg_match($PasswordPatternStr, $PasswordStr) || !preg_match($EmailPatternStr, $EmailAddressStr) || !$PasswordMatchBool) {
-        $ResultArr = [
-            'success' => false,
-            'duplicate_email' => false,
-            'message' => "Error processing your request",
-            'verdict email' => preg_match($PasswordPatternStr, $PasswordStr),
-            'verdict password' => preg_match($EmailPatternStr, $EmailAddressStr),
-            'verdict match' => $PasswordMatchBool,
-            'pass' => $PasswordStr,
-            'conpass' => $ConfirmPasswordStr,
-
-        ];
-        echo json_encode($ResultArr);
-        exit();
-    }
 
     $HashedPassword = password_hash($PasswordStr, PASSWORD_DEFAULT);
 

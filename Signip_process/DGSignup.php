@@ -4,195 +4,257 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>DragonStone - Login & Sign Up</title>
-  <style>
-    body {
-      margin: 0;
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background-color: #f4f7f5;
-      color: #333;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-    }
-    .auth-container {
-      background: #fff;
-      padding: 30px;
-      border-radius: 12px;
-      box-shadow: 0 6px 15px rgba(0,0,0,0.1);
-      width: 350px;
-    }
-    .auth-container h2 {
-      text-align: center;
-      margin-bottom: 20px;
-      color: #1b4332;
-    }
-    .auth-container form {
-      display: flex;
-      flex-direction: column;
-    }
-    .auth-container input[type="text"],
-    .auth-container input[type="email"],
-    .auth-container input[type="password"] {
-      padding: 12px;
-      margin: 8px 0;
-      border: 1px solid #ccc;
-      border-radius: 8px;
-    }
-    .auth-container button {
-      padding: 12px;
-      margin-top: 15px;
-      background: #40916c;
-      border: none;
-      color: #fff;
-      border-radius: 8px;
-      cursor: pointer;
-      font-weight: 600;
-    }
-    .auth-container button:hover {
-      background: #2d6a4f;
-    }
-    .toggle-link {
-      text-align: center;
-      margin-top: 15px;
-    }
-    .toggle-link a {
-      color: #1b4332;
-      text-decoration: none;
-      font-weight: 600;
-    }
-    .toggle-link a:hover {
-      text-decoration: underline;
-    }
-  </style>
-</head>
-<body>
-  <div class="auth-container" id="loginForm" >
-    <h2>Login</h2>
-    <form>
-      <input type="email" id="input2"placeholder="Email" required>
-      <input type="password" id="input" placeholder="Password" required>
-      <button id="login">Login</button>
-    </form>
-    <div class="toggle-link">
-      <p>Don't have an account? <a href="#" onclick="toggleForms()">Sign Up</a></p>
-    </div>
-  </div>
+    <style>
+        * {
+            box-sizing: border-box;
+        }
 
-  <div class="auth-container" id="signupForm" style="display:none;">
-    <h2>Sign Up</h2>
-    <form>
-      <input type="text" id="name" placeholder="Name" required>
-      <input type="text" id="surname" placeholder="Surname" required>
-      <input type="email" id="email" placeholder="Email" required>
-      <input type="password" id="password" placeholder="Password" required>
-      <input type="password" id="cpassword" placeholder="Confirm Password" required>
-      <button id="signup" type="button">Sign Up</button>
-    </form>
-    <div class="toggle-link">
-      <p>Already have an account? <a href="#" onclick="toggleForms()">Login</a></p>
+        body {
+            margin: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f4f7f5;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .auth-container {
+            background: #fff;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 6px 15px rgba(0,0,0,0.1);
+            width: 350px;
+            max-width: 90%;
+            text-align: center;
+        }
+
+        h2 {
+            color: #1b4332;
+            margin-bottom: 15px;
+        }
+
+        input {
+            padding: 12px;
+            margin: 6px 0;
+            border-radius: 8px;
+            border: 1px solid #ccc;
+            width: 100%;
+        }
+
+        button {
+            padding: 12px;
+            margin-top: 15px;
+            background: #40916c;
+            border: none;
+            color: #fff;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            width: 100%;
+        }
+
+        button:hover {
+            background: #2d6a4f;
+        }
+
+        .toggle-link {
+            margin-top: 15px;
+            font-size: 14px;
+        }
+
+        .toggle-link a {
+            color: #1b4332;
+            font-weight: 600;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        .error {
+            color: red;
+            font-size: 13px;
+            margin-top: 5px;
+        }
+
+        .password-wrapper {
+            position: relative;
+        }
+
+        .toggle-password {
+            position: absolute;
+            right: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            cursor: pointer;
+            font-size: 13px;
+            color: #1b4332;
+            font-weight: 600;
+        }
+
+
+    </style>
+</head>
+
+<body>
+
+<div class="auth-container">
+
+    <!-- LOGIN -->
+    <div id="loginForm" class="form">
+        <h2>Login</h2>
+
+        <input type="email" id="logEmail" placeholder="Email">
+
+        <div class="password-wrapper">
+            <input type="password" id="logPassword" placeholder="Password">
+            <span class="toggle-password" onclick="togglePassword('logPassword', this)">Show</span>
+        </div>
+
+        <div class="error" id="loginError"></div>
+
+        <button>Login</button>
+
+        <div class="toggle-link">
+            Don’t have an account?
+            <a onclick="toggleForms()">Sign Up</a>
+        </div>
     </div>
-  </div>
+
+    <!-- SIGNUP -->
+    <div id="signupForm" class="form" style="display:none;">
+        <h2>Sign Up</h2>
+
+        <input type="text" placeholder="Name">
+        <input type="text" placeholder="Surname">
+        <input type="email" placeholder="Email">
+
+        <div class="password-wrapper">
+            <input type="password" id="password" placeholder="Confirm Password">
+            <span class="toggle-password" onclick="togglePassword('password', this)">Show</span>
+        </div>
+
+        <div class="password-wrapper">
+            <input type="password" id="cpassword" placeholder="Confirm Password">
+            <span class="toggle-password" onclick="togglePassword('cpassword', this)">Show</span>
+        </div>
+
+        <div class="error" id="signupError"></div>
+
+        <button>Sign Up</button>
+
+        <div class="toggle-link">
+            Already have an account?
+            <a onclick="toggleForms()">Login</a>
+        </div>
+    </div>
+
+</div>
+
 
 <script>
-  function toggleForms() {
-    const loginForm = document.getElementById('loginForm');
-    const signupForm = document.getElementById('signupForm');
-    if (loginForm.style.display === 'none') {
-      loginForm.style.display = 'block';
-      signupForm.style.display = 'none';
-    } else {
-      loginForm.style.display = 'none';
-      signupForm.style.display = 'block';
-    }
-  }
+    const name = document.getElementById("name");
+    const surname = document.getElementById("surname");
+    const email = document.getElementById("email");
+    const password = document.getElementById("password");
+    const cpassword = document.getElementById("cpassword");
 
-  const btnlogin = document.getElementById('login');
-  const btnsignup = document.getElementById('signup');
-  const name = document.getElementById('name');
-  const surname = document.getElementById('surname');
-  const email = document.getElementById('email');
-  const password = document.getElementById('password');
-  const logpassword = document.getElementById('input');
-  const logemail = document.getElementById('input2');
-  const cpassword = document.getElementById('cpassword');
+    const signupError = document.getElementById("signupError");
 
-  // Sign Up Validation + Submit
-  btnsignup.onclick = function () {
+    const logEmail = document.getElementById("logEmail");
+    const logPassword = document.getElementById("logPassword");
+    const loginError = document.getElementById("loginError");
 
-    // Validation Rules
+    const loginForm = document.getElementById("loginForm");
+    const signupForm = document.getElementById("signupForm");
+
+    function toggleForms() {
+    loginForm.style.display = loginForm.style.display === "none" ? "block" : "none";
+    signupForm.style.display = signupForm.style.display === "none" ? "block" : "none";
+}
+
+function togglePassword(id, el) {
+    const input = document.getElementById(id);
+    input.type = input.type === "password" ? "text" : "password";
+    el.textContent = input.type === "password" ? "Show" : "Hide";
+}
+
+const btnlogin = document.getElementById("login");
+const btnsignup = document.getElementById("signup");
+
+btnsignup.onclick = () => {
+    signupError.textContent = "";
+
     const nameRegex = /^[A-Za-z]+$/;
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    const passwordRegex = /^(?=.*[0-9]).{8,}$/;
-
-    if (!name.value.match(nameRegex)) {
-      alert("Name should contain letters only.");
-      return;
-    }
-
-    if (!surname.value.match(nameRegex)) {
-      alert("Surname should contain letters only.");
-      return;
-    }
-
-    if (!email.value.match(emailRegex)) {
-      alert("Please enter a valid email address.");
-      return;
-    }
-
-    if (!password.value.match(passwordRegex)) {
-      alert("Password must be at least 8 characters and contain at least 1 number.");
-      return;
-    }
-
-    if (password.value !== cpassword.value) {
-      alert("Passwords do not match.");
-      return;
-    }
-
-    // If validation passed → Continue fetch
-    const data = new URLSearchParams();
-    data.append('name', name.value);
-    data.append('surname', surname.value);
-    data.append('email', email.value);
-    data.append('password', password.value);
-    data.append('cpassword', cpassword.value);
-
-    fetch('../register_account.php', {
-      method: 'POST',
-      body: data
-    })
-    .then((response) => response.json())
-    .then((result) => {
-      alert(result.message);
-    })
-    .catch((error) => {
-      console.log("error: " + error)
-    })
-  }
+    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_\-+={}[\]|:;,.<>?\/]).{8,}$/;
 
 
-  btnlogin.onclick = function () {
-    const data = new URLSearchParams();
-    data.append('email', logemail.value);
-    data.append('password', logpassword.value);
+    if (!name.value.match(nameRegex))
+        return signupError.textContent = "Name must contain letters only.";
 
-    fetch('../loginAuth.php', {
-      method: 'POST',
-      body: data
-    })
-    .then((response) => response.json())
-    .then((result) => {
-      alert(result.message);
-      if(result.success){
-        window.location.href = "../Home/Homepage.php";
-      }
-    })
-    .catch((error) => {
-      console.log("error: " + error)
-    })
-  }
+    if (!surname.value.match(nameRegex))
+        return signupError.textContent = "Surname must contain letters only.";
+
+    if (!email.value.match(emailRegex))
+        return signupError.textContent = "Invalid email address.";
+
+    if (!password.value.match(passwordRegex))
+        return signupError.textContent = "Password must be at least 8 characters and include uppercase, lowercase, number, and special character.";
+
+    if (password.value !== cpassword.value)
+        return signupError.textContent = "Passwords do not match.";
+
+    const data = new URLSearchParams({
+        name: name.value,
+        surname: surname.value,
+        email: email.value,
+        password: password.value,
+        cpassword: cpassword.value,
+    });
+
+    fetch("../register_account.php", { method: "POST", body: data })
+        .then(res => res.json())
+        .then(result => {
+            if (!result.success) {
+                signupError.textContent = result.message;
+            } else {
+                alert("Account created successfully!");
+                toggleForms();
+            }
+        });
+};
+
+///////STARRRRRTTTT??????////////
+///////STARRRRRTTTT??????////////
+///////STARRRRRTTTT??????////////
+///////STARRRRRkTTTT??????////////
+///////STARRRRRkTTTT??????////////
+///////STARRRRRkTTTT??????////////
+///////STARRRRRkTTTT??????////////
+
+btnlogin.onclick = () => {
+    loginError.textContent = "";
+
+    const data = new URLSearchParams({
+        email: logEmail.value,
+        password: logPassword.value
+    });
+
+    fetch("../loginAuth.php", { method: "POST", body: data })
+        .then(res => res.json())
+        .then(result => {
+            if (!result.success) {
+                loginError.textContent = result.message;
+            } else {
+                window.location.href = "../Home/Homepage.php";
+            }
+        });
+};
 </script>
 
 </body>
 </html>
+
+
+
+
