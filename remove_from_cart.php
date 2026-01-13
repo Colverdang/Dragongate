@@ -1,6 +1,6 @@
 <?php
-include('background_db_connector.php');
 session_start();
+include('background_db_connector.php');
 
 if ($_SERVER['REQUEST_METHOD'] == 'GET') {
     $product_id = $_GET['id'];

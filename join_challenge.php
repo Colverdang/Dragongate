@@ -1,6 +1,6 @@
 <?php
-include('background_db_connector.php');
 session_start();
+include('background_db_connector.php');
 
 $challengeId = $_POST['challenge_id'];
 $userId = $_SESSION['Id'];

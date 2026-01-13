@@ -1,6 +1,6 @@
 <?php
-include 'background_db_connector.php';
 session_start();
+include 'background_db_connector.php';
 
 if (!isset($_SESSION['Auth']) || !$_SESSION['Auth']) {
     echo json_encode(['success' => false, 'Auth' => false]);

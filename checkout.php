@@ -1,7 +1,7 @@
 <?php
+session_start();
 header("Cache-Control: no-store, no-cache, must-revalidate, max-age=0");
 header("Pragma: no-cache");
-session_start();
 require('background_db_connector.php'); // DB connection
 
 $userId = $_SESSION['Id'];

@@ -1,6 +1,7 @@
 <?php
-include('background_db_connector.php');
 session_start();
+include('background_db_connector.php');
+
 
 header('Content-Type: application/json');
 
