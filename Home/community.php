@@ -567,7 +567,7 @@ async function loadChallenges() {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/x-www-form-urlencoded'
-            }
+            },
             body: `active_id=${id}&points=${points}`
         });
         loadChallenges();
