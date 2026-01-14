@@ -151,7 +151,15 @@
           <div class="row mb-3">
             <div class="col">
               <label class="form-label">Category</label>
-              <select class="form-select pField" id="viewProductCategory" disabled></select>
+              <select class="form-select pField" id="viewProductCategory" disabled>
+                  <option value="0">-- Cleaning & Household Supplies --</option>
+                  <option value="1">-- Kitchen & Dining --</option>
+                  <option value="2">-- Home Décor & Living --</option>
+                  <option value="3">-- Bathroom & Personal Care --</option>
+                  <option value="4">-- Lifestyle & Wellness --</option>
+                  <option value="5">-- Kids & Pets --</option>
+                  <option value="6">-- Outdoor & Garden --</option>
+              </select>
             </div>
             <div class="col">
               <label class="form-label">Carbon Footprint (kg CO₂e)</label>
@@ -458,15 +466,14 @@
                   <div class="mb-3">
                       <label class="form-label">Role</label>
                       <select id="viewEmployeeRole" class="form-select eField">
-                          <option value="1">Admin</option>
-                          <option value="2">Manager</option>
-                          <option value="3">Staff</option>
+                          <option value="0">Admin</option>
+                          <option value="1">Manager</option>
                       </select>
                   </div>
 
                   <div class="mb-3">
                       <label class="form-label">Code</label>
-                      <input type="number" id="viewEmployeeCode" class="form-control eField">
+                      <input type="number" id="viewEmployeeCode" class="form-control" disabled>
                   </div>
 
               </div>
@@ -726,10 +733,12 @@ function saveChallenge() {
 function deleteChallenge(index) {
     if (!confirm("Delete this challenge?")) return;
 
+    const formData = new FormData();
+    formData.append("id", challenges[index].id);
+
     fetch("delete_challenge.php", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ id: challenges[index].id })
+        body: formData
     })
         .then(res => res.json())
         .then(data => {
@@ -738,8 +747,10 @@ function deleteChallenge(index) {
             } else {
                 alert(data.error || "Failed to delete challenge");
             }
-        });
+        })
+        .catch(err => console.error(err));
 }
+
 
 
 
@@ -750,6 +761,7 @@ function loadProductsFromDB() {
     .then(res => res.json())
     .then(data => {
       products = data.map(p => ({
+        id: p.Id,
         name: p.Name,
         desc: p.Description,
         price: parseFloat(p.Price).toFixed(2),
@@ -779,22 +791,37 @@ function renderProducts() {
   `).join('');
 }
 
-function openProductModal(index) {
-  const p = products[index];
-  document.getElementById("editProductIndex").value = index;
+function setSelectByText(selectId, text) {
+    const select = document.getElementById(selectId);
+    const options = Array.from(select.options);
 
-  document.getElementById("viewProductName").value = p.name;
-  document.getElementById("viewProductDesc").value = p.desc;
-  document.getElementById("viewProductPrice").value = p.price;
-  document.getElementById("viewProductCategory").value = p.category;
-  document.getElementById("viewProductCarbon").value = p.carbon;
+    const match = options.find(
+        opt => opt.textContent.replace(/--/g, '').trim() === text.trim()
+    );
 
-  document.getElementById("viewProductImagePreview").src = p.imageUrl || '';
-
-  disableProductFields();
-
-  new bootstrap.Modal(document.getElementById('viewProductModal')).show();
+    if (match) {
+        select.value = match.value;
+    }
 }
+
+function openProductModal(index) {
+    const p = products[index];
+    document.getElementById("editProductIndex").value = index;
+
+    document.getElementById("viewProductName").value = p.name;
+    document.getElementById("viewProductDesc").value = p.desc;
+    document.getElementById("viewProductPrice").value = p.price;
+    document.getElementById("viewProductCarbon").value = p.carbon;
+
+    // Select dropdown by visible text
+    setSelectByText("viewProductCategory", p.category);
+
+    document.getElementById("viewProductImagePreview").src = p.imageUrl || '';
+
+    disableProductFields();
+    new bootstrap.Modal(document.getElementById('viewProductModal')).show();
+}
+
 
 
 function disableProductFields() {
@@ -883,6 +910,47 @@ function saveProduct() {
   .catch(err => console.error("Error adding product:", err));
 }
 
+function deleteProduct(index = null) {
+    // If index not passed (e.g. delete from modal), use hidden field
+    if (index === null) {
+        index = document.getElementById("editProductIndex").value;
+    }
+
+    index = parseInt(index, 10);
+
+    if (isNaN(index) || !products[index] || !products[index].id) {
+        alert("Invalid product selected");
+        return;
+    }
+
+    if (!confirm("Are you sure you want to delete this product?")) return;
+
+    const formData = new FormData();
+    formData.append("id", products[index].id);
+
+    fetch("delete_product.php", {
+        method: "POST",
+        body: formData
+    })
+        .then(res => res.json())
+        .then(data => {
+            if (data.success) {
+                loadProductsFromDB();
+                bootstrap.Modal.getInstance(
+                    document.getElementById('viewProductModal')
+                )?.hide();
+            } else {
+                alert(data.error || "Failed to delete product");
+            }
+        })
+        .catch(err => {
+            console.error(err);
+            alert("Server error while deleting product");
+        });
+}
+
+
+
 //ORDERS
 
 function loadOrdersFromDB() {
@@ -934,7 +1002,7 @@ function renderEmployees() {
     table.innerHTML = employees.map((e, i) => `
     <tr onclick="openEmployeeModal(${i})" style="cursor:pointer;">
       <td>${escapeHtml(e.name)} ${escapeHtml(e.surname)}</td>
-      <td>${escapeHtml(e.role)}</td>
+      <td>${Number(e.role) === 0 ? 'Admin' : 'Manager'}</td>
       <td>${escapeHtml(e.code)}</td>
       <td>
         <button class="btn btn-danger btn-sm"
@@ -1036,6 +1104,32 @@ function saveEmployee() {
         })
         .catch(err => console.error("Error adding employee:", err));
 }
+
+function deleteEmployee(index) {
+    const e = employees[index];
+    if (!confirm(`Are you sure you want to delete ${e.name} ${e.surname}?`)) {
+        return;
+    }
+
+    const formData = new FormData();
+    formData.append("id", e.id);
+
+    fetch("delete_employee.php", {
+        method: "POST",
+        body: formData
+    })
+        .then(res => res.json())
+        .then(data => {
+            if (data.success) {
+                renderEmployees();
+                disableEmployeeFields();
+            } else {
+                alert(data.error || "Failed to delete employee");
+            }
+        })
+        .catch(err => console.error("Error deleting employee:", err));
+}
+
 
 
 
