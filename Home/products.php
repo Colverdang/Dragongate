@@ -412,6 +412,9 @@ function attachAddToCartListeners() {
             // Send data to add_cart.php
             fetch("../add_cart.php", {
                 method: "POST",
+                headers: {
+                    "Content-Type": "application/x-www-form-urlencoded"
+                },
                 body: `id=${productId}&name=${productName}&price=${productPrice}`
             })
             .then(response => response.json())
