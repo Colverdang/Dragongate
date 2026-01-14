@@ -927,32 +927,70 @@ function enableProductEditing() {
 }
 
 
-function saveProductChanges() {
-  const index = document.getElementById("editProductIndex").value;
-  
-  const formData = new FormData();
-  formData.append("name", document.getElementById("viewProductName").value);
-  formData.append("description", document.getElementById("viewProductDesc").value);
-  formData.append("price", document.getElementById("viewProductPrice").value);
-  formData.append("category", document.getElementById("viewProductCategory").value);
-  formData.append("carbon", document.getElementById("viewProductCarbon").value);
+function saveProduct() {
+    const name = document.getElementById("productName").value.trim();
+    const desc = document.getElementById("productDesc").value.trim();
+    const priceRaw = document.getElementById("productPrice").value;
+    const category = document.getElementById("productCategory").value;
+    const carbonRaw = document.getElementById("productCarbon").value;
+    const imageInput = document.getElementById("productImage");
 
-  const imageFile = document.getElementById("viewProductImage").files[0];
-  if (imageFile) formData.append("image", imageFile);
+    if (!name || !desc || !priceRaw || !category || !carbonRaw) {
+        return alert('All fields are required');
+    }
 
-  formData.append("id", products[index].id); // Ensure DB row reference
+    const price = parseFloat(priceRaw);
+    const carbon = parseFloat(carbonRaw);
 
-  fetch("update_product.php", { method: "POST", body: formData })
-    .then(res => res.json())
-    .then(data => {
-      if (data.success) {
-        loadProductsFromDB();
-        disableProductFields();
-      } else {
-        alert(data.error || "Failed to update product");
-      }
-    });
+    if (isNaN(price) || price <= 0) {
+        return alert('Price must be greater than 0');
+    }
+
+    if (imageInput.files.length > 0) {
+        const file = imageInput.files[0];
+
+        // Only images
+        if (!file.type.startsWith("image/")) {
+            return alert("Only image files are allowed");
+        }
+
+        // Max 10MB
+        const maxSize = 10 * 1024 * 1024; // 10MB
+        if (file.size > maxSize) {
+            return alert("Image size must not exceed 10MB");
+        }
+    }
+
+    const formData = new FormData();
+    formData.append('name', name);
+    formData.append('description', desc);
+    formData.append('price', price.toFixed(2));
+    formData.append('category', category);
+    formData.append('carbon', carbon.toFixed(2));
+
+    if (imageInput.files[0]) {
+        formData.append('image', imageInput.files[0]);
+    }
+
+    fetch('add_product.php', {
+        method: 'POST',
+        body: formData
+    })
+        .then(res => res.json())
+        .then(data => {
+            if (data.success) {
+                loadProductsFromDB();
+                document.getElementById("productForm").reset();
+                bootstrap.Modal.getInstance(
+                    document.getElementById('addProductModal')
+                ).hide();
+            } else {
+                alert(data.error || "Failed to add product");
+            }
+        })
+        .catch(err => console.error("Error adding product:", err));
 }
+
 
 
 // ADD PRODUCT TO DB
