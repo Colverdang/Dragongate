@@ -212,7 +212,7 @@
             cpassword: cpassword.value,
         });
 
-        fetch("../register_account.php", { method: "POST", body: data })
+        fetch("../register_admin.php", { method: "POST", body: data })
             .then(res => res.json())
             .then(result => {
                 if (!result.success) {
@@ -233,13 +233,17 @@
             password: logPassword.value
         });
 
-        fetch("../loginAuth.php", { method: "POST", body: data })
+        fetch("../loginAuthAdmin.php", { method: "POST", body: data })
             .then(res => res.json())
             .then(result => {
                 if (!result.success) {
                     loginError.textContent = result.message;
                 } else {
-                    window.location.href = "../Home/Homepage.php";
+                    if (result.Auth) {
+                    window.location.href = "Admin.php";
+                } else {
+                        window.location.href = "code.php";
+                    }
                 }
             });
     };

@@ -332,7 +332,6 @@ session_start();
                 .then((response) => response.json())
                 .then((result) => {
                         if(result.success){
-                            console.log("worked nigga");
                             console.log(result.status);
                             window.location.reload();
                             

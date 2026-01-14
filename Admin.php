@@ -1,9 +1,18 @@
+<?php
+session_start();
+
+if (!isset($_SESSION['Id'])) {
+    echo '<script>window.location.href = "adminLogin.php";</script>';
+    exit;
+}
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Simple Admin Panel</title>
+  <title>DragonStone Admin</title>
 
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" />
 
@@ -23,8 +32,13 @@
     <a href="#" onclick="showSection('users')">Manage Users</a>
     <a href="#" onclick="showSection('products')">Manage Products</a>
     <a href="#" onclick="showSection('challenges')">Manage Challenges</a>
-    <a href="#" onclick="showSection('employees')">Manage Employees</a>
+      <?php if (isset($_SESSION['Role']) && $_SESSION['Role'] == 1): ?>
+          <a href="#" onclick="showSection('employees')">Manage Employees</a>
+      <?php endif; ?>
     <a href="#" onclick="showSection('orders')">Orders</a>
+      <br>
+      <br>
+    <a href="#" onclick="Logout()">Logout</a>
   </div>
 
   <div class="content">
@@ -32,7 +46,6 @@
     <!-- USERS SECTION -->
     <div id="usersSection">
       <h2>Users</h2>
-      <button class="btn btn-primary mb-3" onclick="addUser()">Add User</button>
       <table class="table table-bordered table-striped">
         <thead><tr><th>Name</th><th>Email</th><th>Actions</th></tr></thead>
         <tbody id="userTable"></tbody>
@@ -87,7 +100,73 @@
           </table>
       </div>
 
+
+
   </div>
+
+
+  <!-- View User Modal -->
+  <div class="modal fade" id="viewUserModal" tabindex="-1" aria-hidden="true">
+      <div class="modal-dialog modal-lg modal-dialog-centered">
+          <div class="modal-content">
+
+              <div class="modal-header">
+                  <h5 class="modal-title">User Details</h5>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+              </div>
+
+              <div class="modal-body">
+                  <!-- Hidden index -->
+                  <input type="hidden" id="editUserIndex">
+
+                  <div class="row mb-3">
+                      <div class="col-md-6">
+                          <label class="form-label">Name</label>
+                          <input type="text" id="viewUserName" class="form-control uField">
+                      </div>
+
+                      <div class="col-md-6">
+                          <label class="form-label">Surname</label>
+                          <input type="text" id="viewUserSurname" class="form-control uField">
+                      </div>
+                  </div>
+
+                  <div class="mb-3">
+                      <label class="form-label">Email</label>
+                      <input type="email" id="viewUserEmail" class="form-control uField">
+                  </div>
+
+                  <div class="mb-3">
+                      <label class="form-label">Eco Points</label>
+                      <input type="number" id="viewUserEcoPoints" class="form-control uField">
+                  </div>
+              </div>
+
+              <div class="modal-footer">
+                  <button
+                          id="enableUserEditBtn"
+                          class="btn btn-warning"
+                          onclick="enableUserEditing()" hidden>
+                      Edit
+                  </button>
+
+                  <button
+                          id="saveUserChangesBtn"
+                          class="btn btn-success"
+                          onclick="saveUserChanges()"
+                          style="display:none;">
+                      Save Changes
+                  </button>
+
+                  <button class="btn btn-secondary" data-bs-dismiss="modal">
+                      Close
+                  </button>
+              </div>
+
+          </div>
+      </div>
+  </div>
+
 
   <!-- ADD CATEGORY MODAL -->
   <div class="modal fade" id="addCategoryModal" tabindex="-1">
@@ -523,100 +602,111 @@ function showSection(section) {
 }
 
 // USERS
-function addUser() {
-  const name = prompt("Enter user name:");
-  const email = prompt("Enter user email:");
-  if (name && email) { users.push({ name, email }); renderUsers(); }
+function loadUsersFromDB() {
+    fetch('get_users.php')
+        .then(res => res.json())
+        .then(data => {
+            users = data.map(u => ({
+                id: u.Id,
+                name: u.Name,
+                surname: u.Surname,
+                email: u.Email,
+                ecoPoints: parseInt(u.EcoPoints)
+            }));
+            renderUsers();
+        })
+        .catch(err => console.error("Failed to load users:", err));
 }
 
 function renderUsers() {
-  document.getElementById("userTable").innerHTML = users.map((u, i) => `
-    <tr>
-      <td>${escapeHtml(u.name)}</td>
-      <td>${escapeHtml(u.email)}</td>
-      <td><button class='btn btn-danger btn-sm' onclick='deleteUser(${i})'>Delete</button></td>
-    </tr>
-  `).join('');
+    const table = document.getElementById("userTable");
+    table.innerHTML = users.map((u, i) => `
+        <tr onclick="openUserModal(${i})" style="cursor:pointer;">
+            <td>${escapeHtml(u.name)} ${escapeHtml(u.surname)}</td>
+            <td>${escapeHtml(u.email)}</td>
+            <td>
+                <button class="btn btn-danger btn-sm"
+                    onclick="event.stopPropagation(); deleteUser(${i})">
+                    Delete
+                </button>
+            </td>
+        </tr>
+    `).join('');
 }
 
-function deleteUser(i) { users.splice(i, 1); renderUsers(); }
+function openUserModal(index) {
+    const u = users[index];
 
-// CATEGORIES
-function loadCategoriesFromDB() {
-  fetch('get_categories.php')
-    .then(res => res.json())
-    .then(data => {
-      categories = data.map(c => ({ name: c.Name, desc: c.Description }));
-      renderCategories();
-      updateCategoryDropdown();
+    document.getElementById("editUserIndex").value = index;
+    document.getElementById("viewUserName").value = u.name;
+    document.getElementById("viewUserSurname").value = u.surname;
+    document.getElementById("viewUserEmail").value = u.email;
+    document.getElementById("viewUserEcoPoints").value = u.ecoPoints;
+
+    disableUserFields();
+    new bootstrap.Modal(document.getElementById('viewUserModal')).show();
+}
+
+function disableUserFields() {
+    document.querySelectorAll('.uField').forEach(f => f.disabled = true);
+    document.getElementById("enableUserEditBtn").style.display = 'inline-block';
+    document.getElementById("saveUserChangesBtn").style.display = 'none';
+}
+
+function enableUserEditing() {
+    document.querySelectorAll('.uField').forEach(f => f.disabled = false);
+    document.getElementById("enableUserEditBtn").style.display = 'none';
+    document.getElementById("saveUserChangesBtn").style.display = 'inline-block';
+}
+
+function saveUserChanges() {
+    const index = document.getElementById("editUserIndex").value;
+
+    const formData = new FormData();
+    formData.append("id", users[index].id);
+    formData.append("name", document.getElementById("viewUserName").value);
+    formData.append("surname", document.getElementById("viewUserSurname").value);
+    formData.append("email", document.getElementById("viewUserEmail").value);
+    formData.append("ecoPoints", document.getElementById("viewUserEcoPoints").value);
+
+    fetch("update_user.php", {
+        method: "POST",
+        body: formData
     })
-    .catch(err => console.error("Failed to load categories:", err));
+        .then(res => res.json())
+        .then(data => {
+            if (data.success) {
+                loadUsersFromDB();
+                disableUserFields();
+            } else {
+                alert(data.error || "Failed to update user");
+            }
+        })
+        .catch(err => console.error(err));
 }
 
-function renderCategories() {
-  document.getElementById("categoryTable").innerHTML = categories.map((c, i) => `
-    <tr>
-      <td>${escapeHtml(c.name)}</td>
-      <td>${escapeHtml(c.desc)}</td>
-      <td><button class='btn btn-danger btn-sm' onclick='deleteCategory(${i})'>Delete</button></td>
-    </tr>
-  `).join('');
+function deleteUser(index) {
+    if (!confirm("Delete this user?")) return;
+
+    const formData = new FormData();
+    formData.append("id", users[index].id);
+
+    fetch("delete_user.php", {
+        method: "POST",
+        body: formData
+    })
+        .then(res => res.json())
+        .then(data => {
+            if (data.success) {
+                loadUsersFromDB();
+            } else {
+                alert(data.error || "Failed to delete user");
+            }
+        })
+        .catch(err => console.error(err));
 }
 
-function deleteCategory(i) {
-  const catName = categories[i].name;
-  products = products.map(p => {
-    if (p.category === catName) p.category = '';
-    return p;
-  });
-  categories.splice(i, 1);
-  renderCategories();
-  renderProducts();
-  updateCategoryDropdown();
-}
 
-function updateCategoryDropdown() {
-  const sel = document.getElementById('productCategory');
-  const current = sel.value;
-  sel.innerHTML = '<option value="">-- Select Category --</option>' +
-    categories.map(c => `<option value="${escapeHtmlAttr(c.name)}">${escapeHtml(c.name)}</option>`).join('');
-  if (current) sel.value = current;
-}
-
-// ADD CATEGORY TO DB
-function saveCategory() {
-  const name = document.getElementById("categoryName").value.trim();
-  const desc = document.getElementById("categoryDesc").value.trim();
-
-  if (!name || !desc) return alert('All fields are required');
-
-  // Correctly use URLSearchParams
-  const formData = new URLSearchParams();
-  formData.append('name', name);
-  formData.append('description', desc);
-
-  // Note: no console.log(formData.name) because it doesn't exist
-  console.log([...formData.entries()]); // logs [['name', name], ['description', desc]]
-
-  fetch('add_category.php', {
-    method: 'POST',
-    body: formData, // URLSearchParams works fine as body
-    headers: {
-      'Content-Type': 'application/x-www-form-urlencoded' // important for PHP
-    }
-  })
-  .then(res => res.json())
-  .then(data => {
-    if (data.success) {
-      loadCategoriesFromDB();
-      document.getElementById("categoryForm").reset();
-      bootstrap.Modal.getInstance(document.getElementById('addCategoryModal')).hide();
-    } else {
-      alert(data.error || "Failed to add category");
-    }
-  })
-  .catch(err => console.error("Error adding category:", err));
-}
 //Challenges
 
 function loadChallengesFromDB() {
@@ -1131,6 +1221,25 @@ function deleteEmployee(index) {
 }
 
 
+function Logout() {
+    fetch('logout.php',{
+        method: 'POST',
+
+    })
+        .then((response) => response.json())
+        .then((result) => {
+            if(result.success){
+                console.log("worked nigga");
+                console.log(result.status);
+                window.location.reload();
+            }
+
+        })
+        .catch((error) => {
+
+            console.log("error: " + error)
+        })
+}
 
 
 // Utilities
@@ -1142,12 +1251,12 @@ function escapeHtmlAttr(str) { return escapeHtml(str).replace(/"/g, '&quot;'); }
 
 // Initialize
 window.addEventListener('DOMContentLoaded', () => {
-  loadCategoriesFromDB(); // fetch categories from DB
-  loadProductsFromDB();   // fetch products from DB
-  loadChallengesFromDB();   // fetch products from DB
+  loadProductsFromDB();
+  loadChallengesFromDB();
     loadOrdersFromDB();
-    loadEmployeesFromDB()
-  renderUsers();           // render users if any
+    loadEmployeesFromDB();
+    loadUsersFromDB();
+  renderUsers();
   showSection('users');
 });
 </script>
