@@ -331,16 +331,16 @@ function updateCartBadge() {
                     col.className = 'col-12 col-sm-6 col-lg-4 col-xl-3';
                     col.innerHTML = `
                         <div class="card product-card h-100 animate-fade-in">
-                            <img src="${product.image}" class="card-img-top" alt="${product.name}">
+                            <img src="${product.Image}" class="card-img-top" alt="${product.Name}">
                             <div class="card-body d-flex flex-column">
-                                <h5 class="card-title fw-bold">${product.name}</h5>
-                                <p class="card-text text-muted-foreground flex-grow-1">${product.description}</p>
-                                <p class="card-text fw-bold text-primary fs-5 mb-2">$${product.price}</p>
-                               <button class="btn btn-primary w-100 mt-auto add-to-cart" data-id="${product.id}" data-name="${product.name}" data-price="${product.price}"> Add to Cart</button>
-
+                                <h5 class="card-title fw-bold">${product.Name}</h5>
+                                <p class="card-text text-muted-foreground flex-grow-1">${product.Description}</p>
+                                <p class="card-text fw-bold text-primary fs-5 mb-2">$${product.Price}</p>
+                                <button class="btn btn-primary w-100 mt-auto add-to-cart" data-id="${product.Id}" data-name="${product.Name}" data-price="${product.Price}"> Add to Cart</button>
                             </div>
                         </div>
                     `;
+
                     grid.appendChild(col);
                 });
                 countEl.textContent = `${filteredProducts.length} ${filteredProducts.length === 1 ? 'product' : 'products'} found`;
@@ -356,9 +356,9 @@ function updateCartBadge() {
         // Filter products
         function filterProducts() {
             let filtered = products.filter(product => {
-                const matchesSearch = product.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                                      product.description.toLowerCase().includes(searchQuery.toLowerCase());
-                const matchesCategory = selectedCategory === 'All' || product.category === selectedCategory;
+                const matchesSearch = (product.Name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                    product.Description?.toLowerCase().includes(searchQuery.toLowerCase()));
+                const matchesCategory = selectedCategory === 'All' || product.Category === selectedCategory;
                 return matchesSearch && matchesCategory;
             });
             renderProducts(filtered);
