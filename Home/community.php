@@ -557,7 +557,6 @@ async function loadChallenges() {
     async function joinChallenge(id) {
         await fetch('../join_challenge.php', {
             method: 'POST',
-            headers: {'Content-Type': 'application/x-www-form-urlencoded'},
             body: `challenge_id=${id}`
         });
         loadChallenges();
@@ -566,7 +565,6 @@ async function loadChallenges() {
     async function finishChallenge(id,points) {
         await fetch('../finish_challenge.php', {
             method: 'POST',
-            headers: {'Content-Type': 'application/x-www-form-urlencoded'},
             body: `active_id=${id}&points=${points}`
         });
         loadChallenges();
@@ -577,7 +575,6 @@ async function loadChallenges() {
 
         await fetch('../leave_challenge.php', {
             method: 'POST',
-            headers: {'Content-Type': 'application/x-www-form-urlencoded'},
             body: `active_id=${id}`
         });
         loadChallenges();
@@ -685,7 +682,6 @@ async function loadChallenges() {
 
         fetch('../likepost.php', {
             method: 'POST',
-            headers: {'Content-Type': 'application/json'},
             body: JSON.stringify({ postId })
         })
             .catch(() => {

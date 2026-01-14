@@ -97,7 +97,6 @@ document.querySelectorAll('.qty-input').forEach(input=>{
     input.addEventListener('change',()=>{
         fetch('update_cart_qty.php',{
             method:'POST',
-            headers:{'Content-Type':'application/x-www-form-urlencoded'},
             body:`id=${input.dataset.id}&qty=${input.value}`
         }).then(()=>location.reload());
     });
