@@ -351,7 +351,7 @@ function updateCartBadge() {
                             <div class="card-body d-flex flex-column">
                                 <h5 class="card-title fw-bold">${product.Name}</h5>
                                 <p class="card-text text-muted-foreground flex-grow-1">${product.Description}</p>
-                                <p class="card-text fw-bold text-primary fs-5 mb-2">$${product.Price}</p>
+                                <p class="card-text fw-bold text-primary fs-5 mb-2">R${product.Price}</p>
                                 <button class="btn btn-primary w-100 mt-auto add-to-cart" data-id="${product.Id}" data-name="${product.Name}" data-price="${product.Price}"> Add to Cart</button>
                             </div>
                         </div>
