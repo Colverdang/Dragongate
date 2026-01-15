@@ -628,6 +628,9 @@ async function loadChallenges() {
 
         await fetch('../leave_challenge.php', {
             method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded'
+            },
             body: `active_id=${id}`
         });
         loadChallenges();
