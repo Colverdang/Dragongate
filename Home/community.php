@@ -308,34 +308,85 @@ session_start();
 
         .post-card { transition: box-shadow 0.3s ease; }
         .post-card:hover { box-shadow: 0 8px 20px rgba(0,0,0,0.08); }
+        /* MOBILE FIXES */
+        @media (max-width: 768px) {
+
+            .hero {
+                padding: 80px 15px;
+            }
+
+            .hero h1 {
+                font-size: 1.75rem;
+            }
+
+            .hero p {
+                font-size: 1rem;
+            }
+
+            .inline {
+                flex-direction: column;
+                gap: 12px;
+            }
+
+            .section-box {
+                margin: 20px 12px;
+                padding: 20px;
+            }
+
+            .category-card img,
+            .product-card img {
+                height: 180px;
+            }
+
+            footer {
+                font-size: 0.9rem;
+                padding: 15px;
+            }
+        }
+
     </style>
 </head>
 <body>
+<header class="bg-foreground text-background">
+    <nav class="navbar navbar-expand-md navbar-dark">
+        <div class="container">
 
-<header class="bg-foreground text-background py-3">
-    <div class="container">
-        <div class="d-flex justify-content-between align-items-center">
-            <a href="Homepage.php" class="text-xl fw-bold text-background">
+            <!-- Brand -->
+            <a href="Homepage.php" class="navbar-brand fw-bold">
                 <i class="bi bi-leaf me-2"></i>DragonStone
             </a>
-            <nav class="d-none d-md-flex">
-                <a href="Homepage.php" class="nav-link">Home</a>
-                <a href="products.php" class="nav-link">Products</a>
-                <a href="community.php" class="nav-link active">Community</a>
-                <a href="ecopoints.php" class="nav-link ">Eco-Points</a>
-                <a href="subscription.php" class="nav-link">Subscription</a>
-            </nav>
 
+            <!-- Mobile Toggle -->
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
 
-            <?php
+            <!-- Collapsible Nav -->
+            <div class="collapse navbar-collapse" id="mainNav">
+                <ul class="navbar-nav mx-auto text-center">
+                    <li class="nav-item"><a href="Homepage.php" class="nav-link">Home</a></li>
+                    <li class="nav-item"><a href="products.php" class="nav-link">Products</a></li>
+                    <li class="nav-item"><a href="community.php" class="nav-link active">Community</a></li>
+                    <li class="nav-item"><a href="ecopoints.php" class="nav-link">Eco-Points</a></li>
+                    <li class="nav-item"><a href="subscription.php" class="nav-link">Subscription</a></li>
+                </ul>
+            </div>
 
-            require('../cartLogin.php');
-            ?>
+            <!-- User / Cart (ALWAYS RIGHT) -->
+            <div class="user-nav d-none d-md-flex">
+                <?php require('../cartLogin.php'); ?>
+            </div>
+
+            <!-- Mobile Cart / Auth -->
+            <div class="d-md-none text-center mt-3">
+                <?php require('../cartLogin.php'); ?>
+            </div>
 
 
         </div>
-    </div>
+    </nav>
 </header>
+
 
 <div class="container py-5">
 

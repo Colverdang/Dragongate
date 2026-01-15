@@ -43,4 +43,24 @@ $stmt->execute();
 $result = $stmt->get_result();
 $data = $result->fetch_all(MYSQLI_ASSOC);
 
-echo json_encode($data);
+function e($str) {
+    return htmlspecialchars($str, ENT_QUOTES, 'UTF-8');
+}
+
+$cleanData = [];
+
+foreach ($data as $row) {
+    $cleanData[] = [
+        'Id' => (int)$row['Id'],
+        'Title' => e($row['Title']),
+        'Content' => e($row['Content']),
+        'Date' => $row['Date'],
+        'Initials' => e($row['Initials']),
+        'Name' => e($row['Name']),
+        'likeCount' => (int)$row['likeCount'],
+        'likedByUser' => (int)$row['likedByUser']
+    ];
+}
+
+echo json_encode($cleanData);
+

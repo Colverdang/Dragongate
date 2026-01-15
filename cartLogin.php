@@ -32,13 +32,14 @@ if($Auth !== true){
     $StmtObj->fetch();
     $StmtObj->close();
 
-    $html = '           <div class="header-cart">
-             <a href="..\cart_page.php" class="text-background">
-                        <i class="bi bi-cart fs-4"></i>
-                        <span class="cart-badge" id="cartCount"> '. $numberOfItems . '</span>
-                    </a>
-                    </div>
-                    <a class="nav-link" href="#" onclick="Logout()" >Sign out</a>';
+    $html = '
+    <div class="d-flex align-items-center gap-3">
+        <a href="../cart_page.php" class="text-background position-relative">
+            <i class="bi bi-cart fs-4"></i>
+            <span class="cart-badge" id="cartCount">'.$numberOfItems.'</span>
+        </a>
+        <a class="nav-link" href="#" onclick="Logout()">Sign out</a>
+    </div>';
                     
 }
 

@@ -210,26 +210,45 @@ session_start();
 <body>
 
 <!-- Navbar -->
-    <header class="bg-foreground text-background py-3">
+<header class="bg-foreground text-background">
+    <nav class="navbar navbar-expand-md navbar-dark">
         <div class="container">
-            <div class="d-flex justify-content-between align-items-center">
-                <a href="Homepage.php" class="text-xl fw-bold text-background">
-                    <i class="bi bi-leaf me-2"></i>DragonStone
-                </a>
-                <nav class="d-none d-md-flex">
-                    <a href="Homepage.php" class="nav-link">Home</a>
-                    <a href="products.php" class="nav-link">Products</a>
-                    <a href="community.php" class="nav-link">Community</a>
-                    <a href="ecopoints.php" class="nav-link active">Eco-Points</a>
-                    <a href="subscription.php" class="nav-link">Subscription</a>
-                </nav>
-                <?php 
-                
-                require('../cartLogin.php');
-                ?>
+
+            <!-- Brand -->
+            <a href="Homepage.php" class="navbar-brand fw-bold">
+                <i class="bi bi-leaf me-2"></i>DragonStone
+            </a>
+
+            <!-- Mobile Toggle -->
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <!-- Collapsible Nav -->
+            <div class="collapse navbar-collapse" id="mainNav">
+                <ul class="navbar-nav mx-auto text-center">
+                    <li class="nav-item"><a href="Homepage.php" class="nav-link">Home</a></li>
+                    <li class="nav-item"><a href="products.php" class="nav-link">Products</a></li>
+                    <li class="nav-item"><a href="community.php" class="nav-link ">Community</a></li>
+                    <li class="nav-item"><a href="ecopoints.php" class="nav-link active">Eco-Points</a></li>
+                    <li class="nav-item"><a href="subscription.php" class="nav-link">Subscription</a></li>
+                </ul>
             </div>
+
+            <!-- User / Cart (ALWAYS RIGHT) -->
+            <div class="user-nav d-none d-md-flex">
+                <?php require('../cartLogin.php'); ?>
+            </div>
+
+            <!-- Mobile Cart / Auth -->
+            <div class="d-md-none text-center mt-3">
+                <?php require('../cartLogin.php'); ?>
+            </div>
+
+
         </div>
-    </header>
+    </nav>
+</header>
 
 <!-- Header -->
 <div class="container text-center mt-5">
@@ -278,7 +297,7 @@ if (isset($_SESSION['Id'] ) && $_SESSION['Auth']) {
     <div class="col-md-3">
       <div class="earn-card">
         <i class="fa-solid fa-bag-shopping text-success fs-2"></i>
-        <span class="badge bg-success-subtle text-success border border-success rounded-pill ms-2">10 points</span>
+        <span class="badge bg-success-subtle text-success border border-success rounded-pill ms-2">100 points</span>
         <h5 class="mt-3 fw-semibold">Make Purchases</h5>
         <p>Earn 10 EcoPoints for every product you add to your cart</p>
       </div>
@@ -308,10 +327,11 @@ if (isset($_SESSION['Id'] ) && $_SESSION['Auth']) {
 <div class="container text-center mt-5">
   <h2 class="fw-bold">Redeem Your Points</h2>
 
-  <div class="redeem-box">
-    <h5><i class="fa-solid fa-gift text-secondary me-2"></i> $5 off your next purchase</h5>
-    <p class="text-muted mb-1">Required: 500 points</p>
-  </div>
+    <div class="redeem-box">
+        <h5><i class="fa-solid fa-gift text-secondary me-2"></i> 1% off for every 500 points</h5>
+        <p class="text-muted mb-1">Redeem in increments of 500 points</p>
+    </div>
+
 </div>
 <footer>
     <p>© 2025 DragonStone</p>

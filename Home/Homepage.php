@@ -210,27 +210,44 @@ session_start();
 </head>
 <body>
     <!-- Header -->
-    <header class="bg-foreground text-background py-3">
-        <div class="container">
-            <div class="d-flex justify-content-between align-items-center">
-                <a href="Homepage.php" class="text-xl fw-bold text-background">
+    <header class="bg-foreground text-background">
+        <nav class="navbar navbar-expand-md navbar-dark">
+            <div class="container">
+
+                <!-- Brand -->
+                <a href="Homepage.php" class="navbar-brand fw-bold">
                     <i class="bi bi-leaf me-2"></i>DragonStone
                 </a>
-                <nav class="d-none d-md-flex">
-                    <a href="Homepage.php" class="nav-link active">Home</a>
-                    <a href="products.php" class="nav-link">Products</a>
-                    <a href="community.php" class="nav-link">Community</a>
-                    <a href="ecopoints.php" class="nav-link">Eco-Points</a>
-                    <a href="subscription.php" class="nav-link">Subscription</a>
-                </nav>
 
-                <?php 
-                
-                require('../cartLogin.php');
-                ?>
+                <!-- Mobile Toggle -->
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+
+                <!-- Collapsible Nav -->
+                <div class="collapse navbar-collapse" id="mainNav">
+                    <ul class="navbar-nav mx-auto text-center">
+                        <li class="nav-item"><a href="Homepage.php" class="nav-link active">Home</a></li>
+                        <li class="nav-item"><a href="products.php" class="nav-link">Products</a></li>
+                        <li class="nav-item"><a href="community.php" class="nav-link ">Community</a></li>
+                        <li class="nav-item"><a href="ecopoints.php" class="nav-link">Eco-Points</a></li>
+                        <li class="nav-item"><a href="subscription.php" class="nav-link">Subscription</a></li>
+                    </ul>
+                </div>
+
+                <!-- User / Cart (ALWAYS RIGHT) -->
+                <div class="user-nav d-none d-md-flex">
+                    <?php require('../cartLogin.php'); ?>
+                </div>
+
+                <!-- Mobile Cart / Auth -->
+                <div class="d-md-none text-center mt-3">
+                    <?php require('../cartLogin.php'); ?>
+                </div>
+
 
             </div>
-        </div>
+        </nav>
     </header>
 
     <!-- Hero Section -->
