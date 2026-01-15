@@ -43,8 +43,19 @@ session_start();
         }
 
         const uniqueChallenges = {};
+
         challenges.data.forEach(c => {
-            uniqueChallenges[c.Id] = c; // overwrite duplicates
+            if (!uniqueChallenges[c.Id]) {
+                uniqueChallenges[c.Id] = c;
+                return;
+            }
+
+            if (
+                uniqueChallenges[c.Id].Status === 'Abandoned' &&
+                c.Status === 'Active'
+            ) {
+                uniqueChallenges[c.Id] = c;
+            }
         });
 
         Object.values(uniqueChallenges).forEach(c => {
@@ -61,7 +72,7 @@ session_start();
             else if (c.Status === 'Active') {
                 action = `
             <button class="btn btn-outline-success btn-sm mb-1"
-                onclick="finishChallenge(${c.ActiveId})">
+                onclick="finishChallenge(${c.ActiveId}, ${c.Points})">
                 Finish
             </button><br>
             <button class="btn btn-link p-0 small text-muted"
@@ -105,11 +116,11 @@ session_start();
         loadAllChallenges();
     }
 
-    async function finishChallenge(id) {
+    async function finishChallenge(id,points) {
         await fetch('../finish_challenge.php', {
             method: 'POST',
             headers: {'Content-Type': 'application/x-www-form-urlencoded'},
-            body: `active_id=${id}`
+            body: `active_id=${id}&points=${points}`
         });
         loadAllChallenges();
     }

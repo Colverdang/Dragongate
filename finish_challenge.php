@@ -3,7 +3,7 @@ session_start();
 include('background_db_connector.php');
 
 $activeId = $_POST['active_id'];
-$points = $_POST['points'];
+$points = (int)$_POST['points'];
 $userId   = $_SESSION['Id'];
 
 $SQLStr = "
