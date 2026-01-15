@@ -283,10 +283,9 @@ session_start();
         </div>
     </section>
 
-    <footer>
-        <p>© 2025 DragonStone</p>
-        <a href="#">Home</a> • <a href="#">Shop</a> • <a href="#">Community</a>
-    </footer>
+    <?php
+    require('../footer.php');
+    ?>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script>

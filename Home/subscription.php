@@ -397,10 +397,9 @@ footer a:hover { color:#fff; }
 
 
 
-<footer>
-  <p>© 2025 DragonStone</p>
-  <a href="#">Home</a> • <a href="#">Shop</a> • <a href="#">Community</a>
-</footer>
+<?php
+require('../footer.php');
+?>
 
 <script>
 function showForm(){
